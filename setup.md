@@ -4,7 +4,7 @@
 >
 > **前提（學員已完成）：** git clone 已經做好，學員目前就在 `claude-code-workshop-jr-student/` 資料夾裡。Cursor 開的是這個資料夾。
 >
-> 學員的角色：**看、確認、按 Allow、偶爾在瀏覽器按授權**。
+> 學員的角色：**看、確認、在瀏覽器按授權**。
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Step 1 · 詢問學員要裝哪些工具
+## Step 1 · 詢問學員要裝哪些 AI 工具
 
 **告訴學員，並等他回答：**
 > 「今天 workshop 會用到 AI CLI 工具——在 terminal 裡跑的 AI 助手。有兩個選擇：
@@ -43,8 +43,6 @@
 **告訴學員：**
 > 「我先檢查你的系統現有狀態——看你已經有什麼、還缺什麼。這個步驟不會改任何東西。」
 
-**執行以下檢查並把結果報給學員：**
-
 ```bash
 # macOS / Linux
 echo "===== OS ====="
@@ -62,6 +60,9 @@ claude --version 2>/dev/null || echo "❌ NOT INSTALLED"
 echo "===== Codex CLI ====="
 codex --version 2>/dev/null || echo "❌ NOT INSTALLED"
 
+echo "===== GitHub CLI ====="
+gh --version 2>/dev/null | head -1 || echo "❌ NOT INSTALLED"
+
 echo "===== Homebrew (macOS) ====="
 which brew 2>/dev/null || echo "❌ NOT INSTALLED (沒裝沒關係)"
 ```
@@ -73,6 +74,7 @@ Write-Host "===== Node.js ====="; try { node -v } catch { "❌ NOT INSTALLED" }
 Write-Host "===== npm ====="; try { npm -v } catch { "❌ NOT INSTALLED" }
 Write-Host "===== Claude Code ====="; try { claude --version } catch { "❌ NOT INSTALLED" }
 Write-Host "===== Codex CLI ====="; try { codex --version } catch { "❌ NOT INSTALLED" }
+Write-Host "===== GitHub CLI ====="; try { gh --version } catch { "❌ NOT INSTALLED" }
 ```
 
 **根據結果，告訴學員接下來要做哪幾個 Step**（已裝好的跳過）。
@@ -93,19 +95,16 @@ brew install node
 
 ### 路徑 B：macOS 沒有 Homebrew
 
-**告訴學員：**
-> 「你的 Mac 沒有 Homebrew（常用的套件管理工具）。我們直接去官網下載安裝檔。等下會打開瀏覽器，你下載 LTS（長期支援版），雙擊跑完安裝程式後告訴我。」
-
-打開 https://nodejs.org/，等學員回報安裝完成。
+打開 https://nodejs.org/，讓學員下載 LTS，雙擊安裝後回報。
 
 ### 路徑 C：Windows
 
-打開 https://nodejs.org/，讓學員下載 .msi 安裝檔，**完成後請重新打開 terminal**。
+打開 https://nodejs.org/，讓學員下載 .msi，**完成後請重新打開 terminal**。
 
 ### 驗證（共通）
 ```bash
 node -v   # 應該看到 v18.x.x 或更新
-npm -v    # 應該看到版本號
+npm -v
 ```
 
 ---
@@ -121,14 +120,14 @@ npm -v    # 應該看到版本號
 npm install -g @anthropic-ai/claude-code
 ```
 
-### 常見錯誤與處理
+### 常見錯誤
 
 | 錯誤 | 處理方式 |
 |------|---------|
-| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @anthropic-ai/claude-code`，會請學員輸入 Mac 登入密碼 |
+| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @anthropic-ai/claude-code` |
 | `EACCES`（不想用 sudo） | `mkdir -p ~/.npm-global && npm config set prefix '~/.npm-global'`，再加 `export PATH=~/.npm-global/bin:$PATH` 到 `~/.zshrc`，重 source 後重跑 |
-| `npm: command not found` | Step 2.5 沒做好，回去補 |
-| Windows「拒絕存取」 | 用「以系統管理員身分執行 PowerShell」重開 |
+| `npm: command not found` | 回去 Step 2.5 |
+| Windows「拒絕存取」 | 以系統管理員身分執行 PowerShell |
 
 ### 驗證
 ```bash
@@ -148,12 +147,11 @@ claude --version
 npm install -g @openai/codex
 ```
 
-### 常見錯誤與處理（同 Step 3A）
+### 常見錯誤（同 Step 3A）
 
 | 錯誤 | 處理方式 |
 |------|---------|
-| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @openai/codex` |
-| `EACCES`（不想用 sudo） | 同 Step 3A 的 npm-global 方案 |
+| `EACCES`（macOS） | `sudo npm install -g @openai/codex` |
 | `npm: command not found` | 回去 Step 2.5 |
 | Windows「拒絕存取」 | 以系統管理員身分執行 PowerShell |
 
@@ -167,18 +165,15 @@ codex --version
 ## Step 4A · 登入 Claude Code（Claude Pro/Max 訂閱）
 
 **告訴學員：**
-> 「現在把 Claude Code 跟你的 Anthropic 帳號（就是平常用 Claude.ai 那個）連起來。」
+> 「現在把 Claude Code 跟你的 Anthropic 帳號（就是平常用 Claude.ai 那個）連起來。我跑指令，瀏覽器會打開，你登入授權就好。」
 
 ```bash
 claude
 ```
 
-第一次跑 `claude` 會跳出登入流程：
-- 顯示一段 URL
-- 學員用瀏覽器打開，用 Claude.ai 帳號登入授權
+- 顯示 URL，學員用瀏覽器打開，用 Claude.ai 帳號登入授權
 - 回 terminal，看到歡迎訊息 = 成功
-
-**告訴學員：** 「看到 Claude Code 的對話介面就是成功。輸入 `/exit` 先退出，繼續下一步。」
+- 輸入 `/exit` 退出，繼續下一步
 
 ---
 
@@ -191,33 +186,80 @@ claude
 codex auth
 ```
 
-- 終端機會顯示一段 URL 或 one-time code，並跳出瀏覽器
-- 學員用 ChatGPT 帳號登入授權
+- 瀏覽器跳出，學員用 ChatGPT 帳號登入授權
 - 回 terminal，看到登入成功訊息 = 完成
 
-### 驗證
-```bash
-codex --version   # 應看到版本號
-```
-
-> 若 `codex auth` 指令不存在（舊版本），改設 `OPENAI_API_KEY`：
+> 若 `codex auth` 指令不存在，改設 `OPENAI_API_KEY`：
 > - 到 https://platform.openai.com/api-keys 建立 key
 > - macOS：`echo 'export OPENAI_API_KEY="<key>"' >> ~/.zshrc && source ~/.zshrc`
 > - Windows：`[Environment]::SetEnvironmentVariable("OPENAI_API_KEY","<key>","User")`
 
 ---
 
-## Step 5 · 環境完成 → 交棒給 Claude Code
+## Step 5 · 安裝 GitHub CLI 並登入
+
+> **跳過條件：** `gh --version` 有結果 → 跑 `gh auth status`，已登入就直接跳到 Step 6。
 
 **告訴學員：**
-> 「✅ 環境設定完成。
+> 「GitHub 是用來存放你程式碼和文字檔的雲端倉庫。我先幫你裝 `gh`——一個可以讓我直接操作 GitHub 的小工具，不用你自己點網頁。」
+
+### 安裝 gh
+
+```bash
+# macOS（有 Homebrew）
+brew install gh
+
+# macOS（沒有 Homebrew）→ 打開 https://cli.github.com/ 下載安裝，裝完重開 terminal
+
+# Windows
+winget install --id GitHub.cli
+```
+
+驗證：
+```bash
+gh --version
+```
+
+### 註冊 GitHub 帳號（若尚未有帳號）
+
+**告訴學員：**
+> 「你需要一個免費 GitHub 帳號。我幫你打開註冊頁，填 email、設密碼、選 username（會出現在你的作品網址，建議用好記的英文名）。驗證完 email 後回來告訴我。」
+
+打開 https://github.com/signup，等學員完成。已有帳號直接跳到下一步。
+
+### 登入 gh
+
+**告訴學員：**
+> 「現在把這台電腦跟你的 GitHub 帳號連起來。我跑指令，會跳出一個一次性代碼，你在瀏覽器貼上、按授權就好。」
+
+```bash
+gh auth login --hostname github.com --git-protocol https --web
+```
+
+- 終端機顯示 **one-time code**，瀏覽器同時打開
+- 學員把 code 貼到瀏覽器、按 **Authorize**
+- 回 terminal 看到 `✓ Logged in as <username>` = 成功
+
+驗證並設定 git 身分：
+```bash
+gh auth status
+git config --global user.name  "$(gh api user --jq .login)"
+git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .login)@users.noreply.github.com"
+```
+
+---
+
+## Step 6 · 環境完成 → 交棒給 Claude Code
+
+**告訴學員：**
+> 「✅ 所有工具都裝好了！
 >
-> **已安裝：**
-> - Node.js：[印當前版本]
-> - [已裝的工具列表，例如：Claude Code v1.x.x ✅ / Codex CLI vx.x.x ✅]
-> - 登入：已完成 ✅
+> **已完成：**
+> - Node.js [版本] ✅
+> - [已裝的 AI 工具，例如：Claude Code v1.x.x / Codex CLI vx.x.x] ✅
+> - GitHub CLI（gh）已登入 ✅
 >
-> 現在請**離開 Cursor**，回到 terminal。你已經在 `claude-code-workshop-jr-student/` 資料夾裡了，啟動 Claude Code：
+> 現在請**離開 Cursor**，回到 terminal。你已經在 `claude-code-workshop-jr-student/` 資料夾裡，直接啟動 Claude Code：
 >
 > ```bash
 > claude
@@ -225,11 +267,11 @@ codex --version   # 應看到版本號
 >
 > （用 Codex 的學員也可以跑 `codex`）
 >
-> 啟動後還有兩個小設定（Step 6、Step 7），這次換 **Claude Code** 帶你做。」
+> 啟動後還有最後一個小設定（Step 7），換 **Claude Code** 帶你做。」
 
 ---
 
-## Step 6 · 狀態列面板（在 Claude Code 裡做）
+## Step 7 · 狀態列面板（在 Claude Code 裡做）
 
 > **接力給 Claude Code。** 學員啟動 `claude` 後，把 `panel-setup.md` 餵給 Claude Code（拖進來，或說「請依照 panel-setup.md 幫我裝狀態列面板」）。
 >
@@ -237,15 +279,7 @@ codex --version   # 應看到版本號
 
 ---
 
-## Step 7 · GitHub（在 Claude Code 裡做）
-
-> **接力給 Claude Code。** 把 `github-setup.md` 餵給 Claude Code（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」）。
->
-> 完成標準：學員的 GitHub 上出現一個新 repo，裡面有檔案。
-
----
-
-> ✅ **全部完成 = Step 1–7 都做完。**
+> ✅ **全部完成 = Step 1–7 都做完。** 環境就緒，可以開始 workshop 練習了！
 
 ---
 
@@ -257,14 +291,16 @@ codex --version   # 應看到版本號
 | `EACCES` 安裝工具 | 全域 npm 權限不足 | `sudo` 或改 `~/.npm-global` |
 | `claude: command not found`（裝完之後） | npm 全域路徑不在 PATH | `which npm`，找出 prefix，把 `<prefix>/bin` 加到 `~/.zshrc` PATH |
 | `codex: command not found`（裝完之後） | 同上 | 同上 |
-| `claude` 登入頁沒出現 | 網路問題 / 已登入過 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
+| `claude` 登入頁沒出現 | 網路問題 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
 | `codex auth` 沒有這個指令 | 舊版 codex | 改設 `OPENAI_API_KEY`（見 Step 4B 備案） |
+| `gh auth login` 卡住 | 瀏覽器沒貼 code / 沒按 Authorize | 重跑指令 |
+| `gh: command not found` | Step 5 沒裝好 / 沒重開 terminal | 重做 Step 5 安裝 |
 | Cursor AI 自己卡住或亂答 | 網路 / Cursor 服務問題 | 講師接手，改用手動 setup |
 
 ---
 
 ## 講師救援包
 
-1. **Claude Code 卡登入：** 備一把 API key 紙片，學員用 `echo 'export ANTHROPIC_API_KEY="..."' >> ~/.zshrc && source ~/.zshrc` 設定後直接進入
-2. **Codex 卡登入：** 備一把 OpenAI API key，學員用 `OPENAI_API_KEY` 環境變數頂著
-3. **跳過策略：** 學員卡超過 8 分鐘，先用備用 key 讓他進去，workshop 後再補——不要 30 個人陪 1 個人等
+1. **AI 工具卡登入：** 備一把 API key 紙片（Anthropic 或 OpenAI），學員設環境變數後直接進入
+2. **GitHub 卡登入：** 確認學員有在瀏覽器按 Authorize；`gh auth status` 確認狀態
+3. **跳過策略：** 學員卡超過 8 分鐘，先讓他用備用 key 頂著，workshop 後再補——不要 30 個人陪 1 個人等
