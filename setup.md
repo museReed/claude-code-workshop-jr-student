@@ -4,13 +4,13 @@
 >
 > **前提（學員已完成）：** git clone 已經做好，學員目前就在 `claude-code-workshop-jr-student/` 資料夾裡。Cursor 開的是這個資料夾。
 >
-> 學員的角色：**看、確認、按 Allow、偶爾貼一段 key**。
+> 學員的角色：**看、確認、按 Allow、偶爾在瀏覽器按授權**。
 
 ---
 
 ## 給 Cursor AI 的核心規則
 
-你正在幫一位**非 CS 背景的 Tech Management 碩士生**設定 Claude Code 環境。請嚴格遵守以下原則：
+你正在幫一位**非 CS 背景的 Tech Management 碩士生**設定 AI CLI 環境。請嚴格遵守以下原則：
 
 1. **用繁體中文跟學員溝通**，技術名詞英文。不要假設他懂 `npm`、`brew`、`export` 是什麼——每個動詞都先用一句話解釋。
 2. **每個 Step 開始前，先告訴學員「我接下來要做什麼、為什麼」**，然後等學員說 OK 再開始。
@@ -21,7 +21,24 @@
 
 ---
 
-## Step 1 · 偵測系統與現有環境
+## Step 1 · 詢問學員要裝哪些工具
+
+**告訴學員，並等他回答：**
+> 「今天 workshop 會用到 AI CLI 工具——在 terminal 裡跑的 AI 助手。有兩個選擇：
+>
+> - **Claude Code**（Anthropic 出的）→ 需要 Claude Pro/Max 訂閱帳號
+> - **Codex CLI**（OpenAI 出的）→ 需要 ChatGPT Plus/Pro 訂閱帳號
+>
+> 你有哪個訂閱？想裝哪個（或兩個都裝）？」
+
+根據學員回答，決定後續要走哪幾條路：
+- 只裝 Claude Code → 做 Step 3A + Step 4A
+- 只裝 Codex CLI → 做 Step 3B + Step 4B
+- 兩個都裝 → 做 Step 3A + 3B + 4A + 4B
+
+---
+
+## Step 2 · 偵測系統與現有環境
 
 **告訴學員：**
 > 「我先檢查你的系統現有狀態——看你已經有什麼、還缺什麼。這個步驟不會改任何東西。」
@@ -42,11 +59,11 @@ npm -v 2>/dev/null || echo "❌ NOT INSTALLED"
 echo "===== Claude Code ====="
 claude --version 2>/dev/null || echo "❌ NOT INSTALLED"
 
+echo "===== Codex CLI ====="
+codex --version 2>/dev/null || echo "❌ NOT INSTALLED"
+
 echo "===== Homebrew (macOS) ====="
 which brew 2>/dev/null || echo "❌ NOT INSTALLED (沒裝沒關係)"
-
-echo "===== API key ====="
-[ -n "$ANTHROPIC_API_KEY" ] && echo "✅ ANTHROPIC_API_KEY 已設定" || echo "❌ ANTHROPIC_API_KEY 未設定"
 ```
 
 Windows PowerShell：
@@ -55,23 +72,21 @@ Write-Host "===== OS ====="; (Get-CimInstance Win32_OperatingSystem).Caption
 Write-Host "===== Node.js ====="; try { node -v } catch { "❌ NOT INSTALLED" }
 Write-Host "===== npm ====="; try { npm -v } catch { "❌ NOT INSTALLED" }
 Write-Host "===== Claude Code ====="; try { claude --version } catch { "❌ NOT INSTALLED" }
-Write-Host "===== API key ====="; if ($env:ANTHROPIC_API_KEY) { "✅ 已設定" } else { "❌ 未設定" }
+Write-Host "===== Codex CLI ====="; try { codex --version } catch { "❌ NOT INSTALLED" }
 ```
 
 **根據結果，告訴學員接下來要做哪幾個 Step**（已裝好的跳過）。
 
 ---
 
-## Step 2 · 安裝 Node.js v18+
+## Step 2.5 · 安裝 Node.js v18+（若尚未安裝）
 
-> **跳過條件：** 如果 Step 1 看到 `node -v` 是 v18 或以上，直接跳到 Step 3。
+> **跳過條件：** `node -v` 是 v18 或以上，直接跳到 Step 3。
 
 **告訴學員：**
-> 「Node.js 是 Claude Code 的基底——就像引擎裡的汽油，沒它跑不起來。我幫你裝。」
+> 「Node.js 是這兩個工具共用的基底——就像引擎裡的汽油，沒它跑不起來。我幫你裝。」
 
 ### 路徑 A：macOS + 已有 Homebrew
-
-如果 `which brew` 有結果：
 ```bash
 brew install node
 ```
@@ -85,10 +100,7 @@ brew install node
 
 ### 路徑 C：Windows
 
-**告訴學員：**
-> 「我帶你去 Node.js 官網，你下載 Windows 的 .msi 安裝檔，雙擊一路按 Next 即可。完成後告訴我，**並請重新打開 terminal**（讓系統 reload PATH）。」
-
-打開 https://nodejs.org/。
+打開 https://nodejs.org/，讓學員下載 .msi 安裝檔，**完成後請重新打開 terminal**。
 
 ### 驗證（共通）
 ```bash
@@ -96,16 +108,15 @@ node -v   # 應該看到 v18.x.x 或更新
 npm -v    # 應該看到版本號
 ```
 
-**任何一個失敗就停下來**，跟學員一起檢查，不要硬進 Step 3。
-
 ---
 
-## Step 3 · 安裝 Claude Code
+## Step 3A · 安裝 Claude Code（有 Claude Pro/Max 的學員）
+
+> **跳過條件：** `claude --version` 有結果，直接跳到 Step 4A。
 
 **告訴學員：**
-> 「現在裝 workshop 的主角：Claude Code。它是個 terminal 裡跑的 AI 助手，跟 ChatGPT 不一樣，**它能讀檔、寫檔、跑命令**——所以我們今天才能拿它做事。」
+> 「Claude Code 是 Anthropic 出的 AI CLI——它能讀檔、寫檔、跑命令，跟你的檔案系統直接互動，不只是聊天。」
 
-**執行：**
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
@@ -114,114 +125,107 @@ npm install -g @anthropic-ai/claude-code
 
 | 錯誤 | 處理方式 |
 |------|---------|
-| `EACCES: permission denied`（macOS） | 跟學員說明：「npm 需要管理員權限，等下會請你輸入 Mac 登入密碼」，然後跑 `sudo npm install -g @anthropic-ai/claude-code` |
-| `EACCES`（學員不想用 sudo） | 改設定 npm 全域路徑：`mkdir -p ~/.npm-global && npm config set prefix '~/.npm-global'`，再加 `export PATH=~/.npm-global/bin:$PATH` 到 `~/.zshrc`，重 source 後重跑安裝 |
-| `npm: command not found` | Step 2 沒做好，回去 Step 2 |
-| Windows「拒絕存取」 | 用「以系統管理員身分執行 PowerShell」重開，再跑安裝 |
+| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @anthropic-ai/claude-code`，會請學員輸入 Mac 登入密碼 |
+| `EACCES`（不想用 sudo） | `mkdir -p ~/.npm-global && npm config set prefix '~/.npm-global'`，再加 `export PATH=~/.npm-global/bin:$PATH` 到 `~/.zshrc`，重 source 後重跑 |
+| `npm: command not found` | Step 2.5 沒做好，回去補 |
+| Windows「拒絕存取」 | 用「以系統管理員身分執行 PowerShell」重開 |
 
 ### 驗證
 ```bash
 claude --version
 ```
-看到版本號（例如 `1.0.x`）= 成功。
 
 ---
 
-## Step 4 · 設定 Anthropic API Key ⚠️ 最容易卡
+## Step 3B · 安裝 Codex CLI（有 ChatGPT Plus/Pro 的學員）
+
+> **跳過條件：** `codex --version` 有結果，直接跳到 Step 4B。
 
 **告訴學員：**
-> 「最後一步，讓 Claude Code 能連上 AI 模型。有兩條路：」
->
-> - **路徑 A：** 如果你有 **Claude Pro / Max subscription** → 用訂閱登入（免費，沒額外開銷）
-> - **路徑 B：** 如果沒有訂閱 → 用 **API key**（需要信用卡 + 加值最少 $5）
->
-> 你是哪一個？
+> 「Codex CLI 是 OpenAI 出的 AI CLI——跟 Claude Code 定位相同，都是在 terminal 裡幫你讀檔、寫檔、執行任務的 AI 助手。」
 
-### 路徑 A · Claude Subscription Login
+```bash
+npm install -g @openai/codex
+```
+
+### 常見錯誤與處理（同 Step 3A）
+
+| 錯誤 | 處理方式 |
+|------|---------|
+| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @openai/codex` |
+| `EACCES`（不想用 sudo） | 同 Step 3A 的 npm-global 方案 |
+| `npm: command not found` | 回去 Step 2.5 |
+| Windows「拒絕存取」 | 以系統管理員身分執行 PowerShell |
+
+### 驗證
+```bash
+codex --version
+```
+
+---
+
+## Step 4A · 登入 Claude Code（Claude Pro/Max 訂閱）
+
+**告訴學員：**
+> 「現在把 Claude Code 跟你的 Anthropic 帳號（就是平常用 Claude.ai 那個）連起來。」
 
 ```bash
 claude
 ```
 
 第一次跑 `claude` 會跳出登入流程：
-- 跳出一段 URL
-- 學員用瀏覽器打開
-- 用 Anthropic 帳號（Claude.ai 那個）登入授權
+- 顯示一段 URL
+- 學員用瀏覽器打開，用 Claude.ai 帳號登入授權
 - 回 terminal，看到歡迎訊息 = 成功
 
-**告訴學員：** 「看到 Claude Code 的對話介面就是成功。輸入 `/exit` 先退出，我們繼續下一步。」
+**告訴學員：** 「看到 Claude Code 的對話介面就是成功。輸入 `/exit` 先退出，繼續下一步。」
 
-### 路徑 B · API Key
+---
 
-**步驟 1：取得 key**
+## Step 4B · 登入 Codex CLI（ChatGPT Plus/Pro 訂閱）
 
-帶學員到 https://console.anthropic.com：
-1. 註冊帳號（用 Google 登入最快）
-2. **加信用卡** + **加值 $5**（API 是用多少付多少，加 $5 跑 workshop 綽綽有餘）
-3. 進「**API Keys**」頁面，點「Create Key」
-4. **複製整段 key**（以 `sk-ant-` 開頭），不要關閉那個視窗
-
-**等學員回報「我複製好了」再繼續。**
-
-**步驟 2：設定環境變數**
-
-⚠️ **重要：不要把學員的 key 真的存到任何檔案裡，只引導他自己貼。**
-
-#### macOS / Linux（zsh，現代 Mac 預設）
-
-跟學員說：「請把以下指令的 `<貼你的 key>` 換成你剛複製的 key，然後執行」：
+**告訴學員：**
+> 「現在把 Codex 跟你的 OpenAI / ChatGPT 帳號連起來。」
 
 ```bash
-# 寫進 shell config（下次開 terminal 也記得）
-echo 'export ANTHROPIC_API_KEY="<貼你的 key>"' >> ~/.zshrc
-
-# 立即在當前 terminal 生效
-source ~/.zshrc
+codex auth
 ```
 
-#### Windows PowerShell
+- 終端機會顯示一段 URL 或 one-time code，並跳出瀏覽器
+- 學員用 ChatGPT 帳號登入授權
+- 回 terminal，看到登入成功訊息 = 完成
 
-```powershell
-# 永久設定（下次開 terminal 也記得）
-[Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", "<貼你的 key>", "User")
-
-# 當前 session 也設定（不用重開 terminal）
-$env:ANTHROPIC_API_KEY = "<貼你的 key>"
-```
-
-**步驟 3：驗證**
-
+### 驗證
 ```bash
-# macOS / Linux
-echo $ANTHROPIC_API_KEY | head -c 12   # 應該印出 sk-ant-xxx... 開頭
-
-# Windows
-$env:ANTHROPIC_API_KEY.Substring(0,12)
+codex --version   # 應看到版本號
 ```
 
-若印出空白：
-- macOS：跑 `source ~/.zshrc` 再試
-- Windows：**完全關閉並重開 PowerShell**（`SetEnvironmentVariable` 對新開的 session 才生效）
+> 若 `codex auth` 指令不存在（舊版本），改設 `OPENAI_API_KEY`：
+> - 到 https://platform.openai.com/api-keys 建立 key
+> - macOS：`echo 'export OPENAI_API_KEY="<key>"' >> ~/.zshrc && source ~/.zshrc`
+> - Windows：`[Environment]::SetEnvironmentVariable("OPENAI_API_KEY","<key>","User")`
 
 ---
 
 ## Step 5 · 環境完成 → 交棒給 Claude Code
 
 **告訴學員：**
-> 「✅ 核心環境（Node.js + Claude Code + API key）設定完成。
+> 「✅ 環境設定完成。
 >
-> **檢查清單：**
+> **已安裝：**
 > - Node.js：[印當前版本]
-> - Claude Code：[印當前版本]
-> - API key / 登入：已設定 ✅
+> - [已裝的工具列表，例如：Claude Code v1.x.x ✅ / Codex CLI vx.x.x ✅]
+> - 登入：已完成 ✅
 >
-> 現在請**離開 Cursor**，回到 terminal。你已經在 `claude-code-workshop-jr-student/` 資料夾裡了，直接啟動 Claude Code：
+> 現在請**離開 Cursor**，回到 terminal。你已經在 `claude-code-workshop-jr-student/` 資料夾裡了，啟動 Claude Code：
 >
 > ```bash
 > claude
 > ```
 >
-> 啟動後還有兩個小設定要做（Step 6、Step 7），這次換 **Claude Code** 帶你做。」
+> （用 Codex 的學員也可以跑 `codex`）
+>
+> 啟動後還有兩個小設定（Step 6、Step 7），這次換 **Claude Code** 帶你做。」
 
 ---
 
@@ -237,13 +241,11 @@ $env:ANTHROPIC_API_KEY.Substring(0,12)
 
 > **接力給 Claude Code。** 把 `github-setup.md` 餵給 Claude Code（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」）。
 >
-> 內容：帶學員註冊 GitHub 帳號，Claude Code 自己跑 `gh auth login`、`gh repo create`、`git push`，把成果推上雲端。
->
 > 完成標準：學員的 GitHub 上出現一個新 repo，裡面有檔案。
 
 ---
 
-> ✅ **全部完成 = Step 1–7 都做完。** 跑完這份 `setup.md`、再依序完成 `panel-setup.md`（Step 6）與 `github-setup.md`（Step 7），環境才算真正就緒。
+> ✅ **全部完成 = Step 1–7 都做完。**
 
 ---
 
@@ -251,17 +253,18 @@ $env:ANTHROPIC_API_KEY.Substring(0,12)
 
 | 症狀 | 可能原因 | 解法 |
 |------|---------|------|
-| `npm: command not found` | Node.js 沒裝好 / PATH 沒重 load | 重開 terminal；若還是不行回 Step 2 |
-| `EACCES` 安裝 Claude Code | 全域 npm 權限不足 | `sudo` 或改 `--prefix=~/.npm-global` |
-| `claude: command not found`（裝完之後） | npm 全域路徑不在 PATH | `which npm`，找出 npm prefix，把 `<prefix>/bin` 加到 `~/.zshrc` 的 PATH |
-| API key 設了 `echo` 卻是空 | shell config 沒重 load / Windows 沒重開 terminal | macOS `source ~/.zshrc`；Windows 完全關閉 PowerShell 重開 |
-| Console.anthropic.com 沒辦法刷卡 | 國際信用卡限制（常見於部分卡別） | 換另一張卡；或讓學員暫用講師備用 key |
-| Cursor AI 自己卡住或亂答 | 網路 / Cursor 服務問題 | 講師接手，改用手動 setup（備用文件） |
+| `npm: command not found` | Node.js 沒裝好 / PATH 沒重 load | 重開 terminal；若還是不行回 Step 2.5 |
+| `EACCES` 安裝工具 | 全域 npm 權限不足 | `sudo` 或改 `~/.npm-global` |
+| `claude: command not found`（裝完之後） | npm 全域路徑不在 PATH | `which npm`，找出 prefix，把 `<prefix>/bin` 加到 `~/.zshrc` PATH |
+| `codex: command not found`（裝完之後） | 同上 | 同上 |
+| `claude` 登入頁沒出現 | 網路問題 / 已登入過 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
+| `codex auth` 沒有這個指令 | 舊版 codex | 改設 `OPENAI_API_KEY`（見 Step 4B 備案） |
+| Cursor AI 自己卡住或亂答 | 網路 / Cursor 服務問題 | 講師接手，改用手動 setup |
 
 ---
 
-## 講師救援包（若 Phase B 整體失敗）
+## 講師救援包
 
-1. **講師備用 API key：** 預先建一把，寫在實體紙片上，需要時直接給卡關的學員
-2. **預設環境 zip：** 一份已經設定好的環境參考（僅供示意），AirDrop 給極端卡關者
-3. **跳過策略：** 學員卡超過 8 分鐘，**先讓他用講師 key 頂著，workshop 後再個別處理**——不要 30 個人陪 1 個人等
+1. **Claude Code 卡登入：** 備一把 API key 紙片，學員用 `echo 'export ANTHROPIC_API_KEY="..."' >> ~/.zshrc && source ~/.zshrc` 設定後直接進入
+2. **Codex 卡登入：** 備一把 OpenAI API key，學員用 `OPENAI_API_KEY` 環境變數頂著
+3. **跳過策略：** 學員卡超過 8 分鐘，先用備用 key 讓他進去，workshop 後再補——不要 30 個人陪 1 個人等
