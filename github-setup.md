@@ -2,13 +2,9 @@
 
 > **這份文件是給 Claude Code 看的。** 學員把這份文件餵給 Claude Code（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」），它會帶學員把帳號接好、建立一個個人 repo、並把成果 push 上去。
 >
-> 目標：**以人為的互動越少越好**。學員只需要做兩件事：(1) 在瀏覽器註冊 GitHub 帳號、(2) 在 `gh auth login` 時於瀏覽器按授權。其餘全部由 Claude Code 自主執行。
-
----
-
-## 為什麼要做這步
-
-GitHub 是程式碼與文字檔的**雲端倉庫**：把今天的成果 push 上去，就有了**雲端備份、版本歷史、可分享的連結**。這是你成果的「歸宿」之一（另一個是 Obsidian）。
+> **前提（學員已完成）：** git 已可用（Phase B 的 clone 成功就代表 git 正常），學員目前在 `claude-code-workshop-jr-student/` 資料夾裡。
+>
+> 目標：**人工介入越少越好**。學員只需要做兩件事：(1) 在瀏覽器註冊 GitHub 帳號、(2) 在 `gh auth login` 時於瀏覽器按授權。其餘全部由 Claude Code 自主執行。
 
 ---
 
@@ -85,30 +81,34 @@ git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .lo
 
 ---
 
-## Step 4 · 建立 repo 並 push（Claude Code 自主執行）
+## Step 4 · 建立個人 repo 並 push（Claude Code 自主執行）
 
-**告訴學員：** 「接下來我自己來：幫你開一個新的 repo，放一個起始檔案，推上 GitHub。你看著就好。」
+**告訴學員：** 「接下來我自己來：幫你開一個新的個人 repo，把目前這個資料夾的成果推上去。你看著就好。」
 
-在學員目前的工作資料夾執行（若資料夾還沒有 git，就初始化）：
+> ⚠️ 注意：我們現在在 `claude-code-workshop-jr-student/`，這是 workshop 素材 repo（museReed 的）。要建的是**你自己帳號下的個人成果 repo**，命名為 `claude-code-workshop`。
 
 ```bash
-# 1. 準備一個起始檔案（若資料夾是空的，給它一個 README）
-[ -f README.md ] || printf '# %s\n\n我的 Claude Code Workshop 成果。\n' "$(basename "$PWD")" > README.md
+# 1. 建立個人成果資料夾（與 workshop 素材分開）
+mkdir -p ~/Desktop/my-claude-workshop
+cd ~/Desktop/my-claude-workshop
 
-# 2. 初始化 git（若尚未初始化）
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 || git init -b main
+# 2. 初始化 git
+git init -b main
 
-# 3. 第一次 commit
-git add -A
-git commit -m "First commit from Claude Code Workshop" || echo "（沒有新變更可 commit，繼續）"
+# 3. 建立起始 README
+printf '# 我的 Claude Code Workshop 成果\n\n今天學到的東西都在這裡。\n' > README.md
 
-# 4. 建立 GitHub repo 並一次 push（repo 名用資料夾名，私人 repo）
-gh repo create "$(basename "$PWD")" --private --source=. --remote=origin --push
+# 4. 第一次 commit
+git add README.md
+git commit -m "First commit from Claude Code Workshop"
+
+# 5. 建立 GitHub repo 並 push
+gh repo create "claude-code-workshop" --private --source=. --remote=origin --push
 ```
 
-> 若 `gh repo create` 說 repo 已存在：改用 `git push -u origin main`。
+> 若 `gh repo create` 說 repo 已存在：改用 `git remote add origin https://github.com/<username>/claude-code-workshop.git && git push -u origin main`。
 
-**告訴學員：** 「好了，我幫你開了一個 GitHub repo 並把檔案推上去。」打開來看：
+**告訴學員：** 「好了，你有自己的 GitHub repo 了！來看看：」
 ```bash
 gh repo view --web
 ```
@@ -120,13 +120,13 @@ gh repo view --web
 ```bash
 gh repo view --web   # 瀏覽器打開你的新 repo
 ```
-在 GitHub 頁面看到剛剛的 `README.md`（或你的檔案）= **成功**。
+在 GitHub 頁面看到 `README.md` = **成功**。
 
 ---
 
 ## 之後怎麼用（一句話）
 
-以後每次想備份成果，在資料夾裡跑這三行（或直接叫 Claude Code「幫我 push 上 GitHub」）：
+以後每次想備份成果，在 `~/Desktop/my-claude-workshop/` 裡跑這三行（或直接叫 Claude Code「幫我 push 上 GitHub」）：
 ```bash
 git add -A && git commit -m "update" && git push
 ```
@@ -139,6 +139,6 @@ git add -A && git commit -m "update" && git push
 |------|------|
 | `gh: command not found` | Step 2 沒裝好 / 沒重開 terminal；重做 Step 2 |
 | `gh auth login` 卡住 | 確認瀏覽器有貼 one-time code 並按 Authorize；可重跑指令 |
-| `repository already exists` | 改跑 `git push -u origin main` |
+| `repository already exists` | 改跑 `git remote add origin ... && git push -u origin main` |
 | push 被拒（non-fast-forward） | 先 `git pull --rebase origin main` 再 `git push` |
 | 學員沒有 Homebrew 也裝不了 gh | 改用官方安裝頁 <https://cli.github.com/>，或先跳過、workshop 後補做 |
