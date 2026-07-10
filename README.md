@@ -11,7 +11,9 @@
    cd claude-code-workshop-jr-student
    ```
 
-2. 依照講師指示，把 `給AI_Agent的環境安裝文件/ai-cli-setup.md` 餵給你的 AI Agent（Cursor / Claude Code 等）完成環境設定。
+2. 依照講師指示完成設定，分兩階段：
+   - **IDE 階段**：把 `給AI_Agent的環境安裝文件/to_IDE_AI_Agent_setup.md` 餵給 IDE 的 AI Agent（Antigravity）→ 裝好環境。
+   - **CLI 階段**：回 terminal 啟動 `claude` 或 `codex`，把 `給AI_Agent的環境安裝文件/to_CLI_AI_Agent_setup.md` 餵給它 → 完成 GitHub 與面板。
 
 ## 資料夾說明
 
@@ -23,11 +25,12 @@
 
 ### `給AI_Agent的環境安裝文件/`
 
-| 檔案 | 說明 |
-|---|---|
-| `ai-cli-setup.md` | 裝 Node + AI CLI（Claude Code / Codex）並啟動 |
-| `github-setup.md` | GitHub 設定、建立個人 repo 並 push |
-| `ClaudeCodeSkill/panel-setup.md` | 狀態列面板安裝指令 |
+| 檔案 | 給誰 / 何時 | 說明 |
+|---|---|---|
+| `to_IDE_AI_Agent_setup.md` | IDE Agent（第 1 階段） | 裝 Node + AI CLI（Claude Code / Codex）、提醒註冊 GitHub |
+| `to_CLI_AI_Agent_setup.md` | CLI Agent（第 2 階段） | 啟動 claude/codex 後做 GitHub、面板 |
+| `github-setup.md` | CLI Agent 讀 | GitHub 設定、建立個人 repo 並 push |
+| `ClaudeCodeSkill/panel-setup.md` | Claude Code 讀 | 狀態列面板安裝指令 |
 
 ### `學生閱讀資料/`
 
