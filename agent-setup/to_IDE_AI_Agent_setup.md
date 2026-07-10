@@ -93,25 +93,41 @@ Write-Host "===== GitHub CLI ====="; try { gh --version } catch { "❌ NOT INSTA
 
 ---
 
-## Step 2.5 · 安裝 Node.js v18+（若尚未安裝）
+## Step 2.5 · 安裝 Node.js v18+（若尚未安裝，**由你直接下載安裝，不要叫學員上網站**）
 
 > **跳過條件：** `node -v` 是 v18 或以上，直接跳到 Step 3。
 
 **告訴學員：**
-> 「Node.js 是這兩個工具共用的基底——就像引擎裡的汽油，沒它跑不起來。我幫你裝。」
+> 「Node.js 是這兩個工具共用的基底——就像引擎裡的汽油，沒它跑不起來。**我直接幫你下載安裝，你不用上任何網站點。**」
+
+> ⚠️ 依學員系統選一條路徑，**用指令把 Node 裝好**。**不要**把學員導去 nodejs.org 手動下載。
 
 ### 路徑 A：macOS + 已有 Homebrew
 ```bash
 brew install node
 ```
 
-### 路徑 B：macOS 沒有 Homebrew
+### 路徑 B：macOS 沒有 Homebrew → 你直接抓官方安裝包裝好
+安裝要用 `sudo`，依核心規則 3 先跟學員說明再執行：
+```bash
+# 1. 取得目前 LTS 版本號（純 shell，不需額外工具）
+LTS=$(curl -fsSL https://nodejs.org/dist/index.json \
+  | tr '}' '\n' | grep -m1 '"lts":"[A-Za-z]' \
+  | sed -E 's/.*"version":"([^"]+)".*/\1/')
+echo "要安裝的 Node 版本：$LTS"
 
-打開 https://nodejs.org/，讓學員下載 LTS，雙擊安裝後回報。
+# 2. 下載官方「通用」安裝包（Intel / Apple Silicon 皆適用）
+curl -fL -o /tmp/node-lts.pkg "https://nodejs.org/dist/$LTS/node-$LTS.pkg"
 
-### 路徑 C：Windows
+# 3. 安裝
+sudo installer -pkg /tmp/node-lts.pkg -target /
+```
 
-打開 https://nodejs.org/，讓學員下載 .msi，**完成後請重新打開 terminal**。
+### 路徑 C：Windows → 用系統內建的 winget 直接裝
+```powershell
+winget install --id OpenJS.NodeJS.LTS -e --source winget
+```
+裝完提醒學員照核心規則 7 **關掉 IDE 重開**，PATH 才生效。
 
 ### 驗證（共通）
 ```bash
