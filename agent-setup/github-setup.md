@@ -1,6 +1,6 @@
 # GitHub 設定指南（註冊 → 建 repo → push）
 
-> **這份文件是給 AI Agent（Claude Code 或 Codex）看的。** 學員把這份文件餵給他的 AI CLI（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」），它會帶學員把帳號接好、建立一個個人 repo、並把成果 push 上去。
+> **這份是 GitHub 設定的「細部指令參考」。** 由 CLI Agent 在執行 `to_CLI_AI_Agent_setup.md` 的 GitHub 步驟時讀取——**學員通常不需要單獨餵這份**，餵 `to_CLI_AI_Agent_setup.md` 當入口即可，它會帶到這裡。內容：帶學員接好帳號、建立個人 repo、push 成果。
 >
 > **前提（學員已完成）：** git 已可用（Phase B 的 clone 成功就代表 git 正常），學員目前在 `claude-code-workshop-jr-student/` 資料夾裡。
 >

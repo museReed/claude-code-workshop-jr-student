@@ -18,15 +18,18 @@
 
 ## Step 1 · GitHub 設定
 
-> 把同資料夾的 `github-setup.md` 讀進來（學員拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」），依它完成：裝 `gh`、帶學員登入、建立學員自己的個人 repo 並 push。
+> GitHub 設定的**細部指令**在同資料夾的 `github-setup.md`——你（CLI Agent）把它讀進來、依步驟完成：裝 `gh`、帶學員登入、建立學員自己的個人 repo 並 push。
+>
+> 註：`github-setup.md` 只是**給你參考的細部文件**，學員餵的入口是這份 `to_CLI_AI_Agent_setup.md`，不必請學員另外餵 `github-setup.md`。
 >
 > 完成標準：學員自己帳號下出現 `claude-code-workshop` repo。
 
 ---
 
-## Step 2 · 狀態列面板（**只有 Claude Code 版**）
+## Step 2 · 狀態列面板（**只有 Claude Code 版**，帶學員照網頁操作）
 
-> **Claude Code 學員：** 讀 `ClaudeCodeSkill/panel-setup.md`（學員拖進來，或說「請依照 panel-setup.md 幫我裝狀態列面板」）。
+> **Claude Code 學員：** 這步不是你自動裝，而是**帶著學員打開下面網頁、照著步驟做**：
+> 👉 <https://musereed.github.io/jr_workshop_setup_env/#/item/status-panel>
 > 完成標準：Claude Code 畫面最底下出現狀態列。
 >
 > ⚠️ **Codex 學員：** 面板是 Claude Code 專屬（claude-hud），Codex 版尚未提供，**跳過這步**——做完 Step 1 就算全部就緒。

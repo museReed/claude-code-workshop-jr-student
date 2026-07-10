@@ -29,8 +29,9 @@
 |---|---|---|
 | `to_IDE_AI_Agent_setup.md` | IDE Agent（第 1 階段） | 裝 Node + AI CLI（Claude Code / Codex）、提醒註冊 GitHub |
 | `to_CLI_AI_Agent_setup.md` | CLI Agent（第 2 階段） | 啟動 claude/codex 後做 GitHub、面板 |
-| `github-setup.md` | CLI Agent 讀 | GitHub 設定、建立個人 repo 並 push |
-| `ClaudeCodeSkill/panel-setup.md` | Claude Code 讀 | 狀態列面板安裝指令 |
+| `github-setup.md` | to_CLI 讀取的細部參考 | GitHub 設定、建立個人 repo 並 push 的細部指令 |
+
+> 狀態列面板改由網頁帶學員操作：<https://musereed.github.io/jr_workshop_setup_env/#/item/status-panel>
 
 ### `student-guide/`
 

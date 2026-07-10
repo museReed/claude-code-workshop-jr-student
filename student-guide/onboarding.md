@@ -18,8 +18,7 @@
 - [ ] （選讀）先看過今天會用到的檔案（clone 後都在 `agent-setup/` 裡）：
   - [`to_IDE_AI_Agent_setup.md`](../agent-setup/to_IDE_AI_Agent_setup.md)（IDE 階段：裝環境）
   - [`to_CLI_AI_Agent_setup.md`](../agent-setup/to_CLI_AI_Agent_setup.md)（CLI 階段：GitHub + 面板）
-  - [`github-setup.md`](../agent-setup/github-setup.md)（GitHub 設定細節）
-  - [`panel-setup.md`](../agent-setup/ClaudeCodeSkill/panel-setup.md)（狀態列面板）
+  - [`github-setup.md`](../agent-setup/github-setup.md)（GitHub 設定的細部參考，to_CLI 會讀它）
 - [ ] 確認可以**分享螢幕**（Google Meet / Zoom 都先測一次）
 
 > 裝不起來？不用焦慮，當天有時間救援。能先裝好就先裝。
