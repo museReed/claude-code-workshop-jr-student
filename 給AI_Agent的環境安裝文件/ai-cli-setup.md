@@ -1,14 +1,14 @@
 # Workshop Setup Instructions
 
-> **這份文件是給 Cursor AI 看的。** 學員把這份文件拖進 Cursor 的 Composer / Agent，跟它說「請依照這份文件幫我設定環境」，它會帶學員一步步做完。
+> **這份文件是給 AI Agent 看的。** 學員把這份文件交給他的 AI Agent（例如 Cursor、Claude Code 等），跟它說「請依照這份文件幫我設定環境」，它會帶學員一步步做完。
 >
-> **前提（學員已完成）：** git clone 已經做好，學員目前就在 `claude-code-workshop-jr-student/` 資料夾裡。Cursor 開的是這個資料夾。
+> **前提（學員已完成）：** git clone 已經做好，學員目前就在 `claude-code-workshop-jr-student/` 資料夾裡，AI Agent 開的是這個資料夾。
 >
 > 學員的角色：**看、確認、在瀏覽器按授權**。
 
 ---
 
-## 給 Cursor AI 的核心規則
+## 給 AI Agent 的核心規則
 
 你正在幫一位**非工程背景的初學者**設定 AI CLI 環境。請嚴格遵守以下原則：
 
@@ -18,6 +18,7 @@
 4. **跑完每個指令，看 output 確認成功，再進下一步。** 失敗就停下來解釋，不要硬往下。
 5. **如果某步驟學員系統已經做好了，跳過。** 例如 `node -v` 顯示 v18+，就不用再裝 Node.js。
 6. **不確定的時候，問學員，不要猜。**
+7. **⚠️ Windows 學員特別注意：用 winget / PowerShell 裝完任何工具（Node、`gh`、`claude`…）後，PATH 不會馬上生效。** 請學員**把整個 IDE（Cursor）關掉、重新開啟**，新開的 terminal 才吃得到剛裝好的指令。裝完卻 `command not found`，九成是這個——別急著重裝，先重開 IDE。
 
 ---
 
@@ -39,12 +40,11 @@
 ### 學員說「我兩個訂閱都沒有」
 
 **告訴學員：**
-> 「今天用的工具需要付費訂閱，課程不提供共用金鑰。你可以現在申請一個（約 US$20/月），或今天先看講師示範、之後自己補做：
+> 「今天用的工具需要付費訂閱，課程不提供共用金鑰。**本課程主要示範 Claude Code，建議你申請它**（Claude Pro，約 US$20/月）：
 >
-> - 想用 **Claude Code** → 打開 <https://claude.ai>，登入後點 **Upgrade to Pro**（Pro 就夠上課，Max 是重度使用者才需要）。
-> - 想用 **Codex CLI** → 打開 <https://chatgpt.com>，升級 **ChatGPT Plus**。
+> - 打開 <https://claude.ai>，登入後點 **Upgrade to Pro**（Pro 就夠上課，Max 是重度使用者才需要）。
 >
-> 申請 + 付款完成後回來告訴我，我們接著裝環境。」
+> 申請 + 付款完成後回來告訴我，我們接著裝環境。真的不方便付費也沒關係——今天先看講師示範、之後自己補做。」
 
 > **給講師：** 學員當場不想付費也沒關係——讓他看鄰座或講師的螢幕，跟著理解流程，環境當天先跳過。**不要用 API key 幫他頂替。**
 
