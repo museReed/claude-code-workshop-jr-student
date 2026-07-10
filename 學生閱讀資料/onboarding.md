@@ -14,18 +14,18 @@
   ```
   cd ~/Desktop && git clone https://github.com/museReed/claude-code-workshop-jr-student.git
   ```
-  然後用 Cursor **開這個資料夾**——之後的 `setup.md`、`github-setup.md` 都預設你人已經在裡面。
-- [ ] （選讀）先看過今天會用到的三份檔案（clone 後都在資料夾裡）：
-  - [`setup.md`](./setup.md)（裝環境）
-  - [`panel-setup.md`](./panel-setup.md)（裝狀態列面板）
-  - [`github-setup.md`](./github-setup.md)（連 GitHub）
+  然後用 Cursor **開這個資料夾**——之後餵給 AI 的 `ai-cli-setup.md`、`github-setup.md` 都預設你人已經在裡面。
+- [ ] （選讀）先看過今天會用到的檔案（clone 後都在 `給AI_Agent的環境安裝文件/` 裡）：
+  - [`ai-cli-setup.md`](../給AI_Agent的環境安裝文件/ai-cli-setup.md)（裝環境）
+  - [`panel-setup.md`](../給AI_Agent的環境安裝文件/ClaudeCodeSkill/panel-setup.md)（裝狀態列面板）
+  - [`github-setup.md`](../給AI_Agent的環境安裝文件/github-setup.md)（連 GitHub）
 - [ ] 確認可以**分享螢幕**（Google Meet / Zoom 都先測一次）
 
 > 裝不起來？不用焦慮，當天有時間救援。能先裝好就先裝。
 
 ---
 
-## 二、操作小抄（最常卡的 7 件事）
+## 二、操作小抄（最常卡的 8 件事）
 
 ### 1. ⚠️ Cursor 登入：選「免費」，不要選 Pro
 登入後若看到「Pro plan」「Upgrade」「$20/month」**先不要點**。我們今天用免費就夠。看到要刷卡＝你點到付費方案了，退回上一頁重選。
@@ -59,6 +59,9 @@
 像 `/plugin install ...`、`/claude-hud:setup` 這種**斜線開頭**的是 Claude Code 的指令：
 - 貼到 **Claude Code 的輸入框**（不是 Mac 的終端機、也不是 Cursor 的聊天框）。
 - 一行一行貼、一行一行按 Enter。
+
+### 8. 💻 Windows 專屬：裝完工具「關掉 IDE 重開」
+用 winget / PowerShell 裝完 Node、`gh`、`claude` 這些工具後，**PATH 不會馬上生效**。把整個 **Cursor 關掉、重新打開**，新開的 terminal 才認得剛裝好的指令。裝完卻說「找不到指令 / command not found」，先重開 IDE 再說，不用急著重裝。
 
 ---
 
