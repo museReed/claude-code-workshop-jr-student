@@ -15,11 +15,11 @@
   cd ~/Desktop && git clone https://github.com/museReed/claude-code-workshop-jr-student.git
   ```
   然後用 Antigravity **開這個資料夾**——之後餵給 AI 的 `to_IDE_AI_Agent_setup.md`、`to_CLI_AI_Agent_setup.md` 都預設你人已經在裡面。
-- [ ] （選讀）先看過今天會用到的檔案（clone 後都在 `給AI_Agent的環境安裝文件/` 裡）：
-  - [`to_IDE_AI_Agent_setup.md`](../給AI_Agent的環境安裝文件/to_IDE_AI_Agent_setup.md)（IDE 階段：裝環境）
-  - [`to_CLI_AI_Agent_setup.md`](../給AI_Agent的環境安裝文件/to_CLI_AI_Agent_setup.md)（CLI 階段：GitHub + 面板）
-  - [`github-setup.md`](../給AI_Agent的環境安裝文件/github-setup.md)（GitHub 設定細節）
-  - [`panel-setup.md`](../給AI_Agent的環境安裝文件/ClaudeCodeSkill/panel-setup.md)（狀態列面板）
+- [ ] （選讀）先看過今天會用到的檔案（clone 後都在 `agent-setup/` 裡）：
+  - [`to_IDE_AI_Agent_setup.md`](../agent-setup/to_IDE_AI_Agent_setup.md)（IDE 階段：裝環境）
+  - [`to_CLI_AI_Agent_setup.md`](../agent-setup/to_CLI_AI_Agent_setup.md)（CLI 階段：GitHub + 面板）
+  - [`github-setup.md`](../agent-setup/github-setup.md)（GitHub 設定細節）
+  - [`panel-setup.md`](../agent-setup/ClaudeCodeSkill/panel-setup.md)（狀態列面板）
 - [ ] 確認可以**分享螢幕**（Google Meet / Zoom 都先測一次）
 
 > 裝不起來？不用焦慮，當天有時間救援。能先裝好就先裝。

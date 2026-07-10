@@ -5,7 +5,7 @@
 ---
 
 ### Q1. 我不是工程師（PM / Data Scientist / 學生），需要用 GitHub 嗎？
-需要、而且很值得。GitHub 是你成果的**雲端備份 + 版本歷史 + 分享連結**。連上 Claude Code 後，你可以用**自然語言**叫它幫你把檔案推上去、或從 GitHub 把東西抓下來，不必自己上網站點來點去。設定見 [`github-setup.md`](../給AI_Agent的環境安裝文件/github-setup.md)。
+需要、而且很值得。GitHub 是你成果的**雲端備份 + 版本歷史 + 分享連結**。連上 Claude Code 後，你可以用**自然語言**叫它幫你把檔案推上去、或從 GitHub 把東西抓下來，不必自己上網站點來點去。設定見 [`github-setup.md`](../agent-setup/github-setup.md)。
 
 ### Q2. 各家 LLM（Claude / GPT / Gemini / DeepSeek…）差在哪？只有 context window 不同嗎？
 不只。它們在**推理能力、訓練資料、強項、速度、價格**上都有差別，context window（一次能記多少）只是其中一個維度。實務上的選法：難任務用最強的（Opus 級），日常用均衡的（Sonnet 級），大量簡單任務用最便宜的（Haiku 級）。
