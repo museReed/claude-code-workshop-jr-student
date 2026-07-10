@@ -20,14 +20,15 @@
 
 ---
 
-## Step 1 · 註冊 GitHub 帳號（學員手動，瀏覽器）
+## Step 1 · 確認 GitHub 帳號（多數學員前一階段已註冊）
 
-**告訴學員：**
-> 「先註冊一個免費 GitHub 帳號。我幫你開註冊頁，你填 email、設密碼、選一個 username（之後會出現在你的作品網址裡，建議用好記的英文名）。驗證完 email 後回來告訴我，並把你的 **username** 給我。」
+> **注意：** 前一階段（`to_IDE_AI_Agent_setup.md` Step 5）**已經提醒學員先去註冊 GitHub 了**，多數人這時已有帳號。所以這步先「問」、不要急著開註冊頁。
 
-開啟 <https://github.com/signup>，等學員回報「註冊好了」+ 提供 username。
+**先問學員：**
+> 「你有 GitHub 帳號了嗎？有的話，把你的 **username** 給我就好（之後會用到）。」
 
-> 已經有 GitHub 帳號的學員：直接跳到 Step 2。
+- **已有帳號** → 記下 username，直接跳到 Step 2。
+- **還沒註冊** → 才幫他開 <https://github.com/signup>，帶他填 email、設密碼、選 username（會出現在作品網址，建議用好記的英文名），驗證完 email 後回報 username，再進 Step 2。
 
 ---
 
@@ -50,13 +51,21 @@ ARCH=$([ "$(uname -m)" = "arm64" ] && echo arm64 || echo amd64)
 curl -fL -o /tmp/gh.zip \
   "https://github.com/cli/cli/releases/download/v${GH_VER}/gh_${GH_VER}_macOS_${ARCH}.zip"
 unzip -oq /tmp/gh.zip -d /tmp
-# 放進 npm 全域 bin：claude/codex 就裝在這，一定在 PATH、免管理員權限
+# 放進 npm 全域 bin：claude/codex 就裝在這，一定在 PATH
 DEST="$(npm config get prefix)/bin"
-mkdir -p "$DEST" && cp "/tmp/gh_${GH_VER}_macOS_${ARCH}/bin/gh" "$DEST/gh"
+mkdir -p "$DEST" 2>/dev/null
+# 先試免權限複製；若 DEST 是系統目錄（如 /usr/local，非本人擁有）會失敗，改用 sudo（會跳 Password:，請學員自己輸入）
+cp "/tmp/gh_${GH_VER}_macOS_${ARCH}/bin/gh" "$DEST/gh" 2>/dev/null \
+  || sudo cp "/tmp/gh_${GH_VER}_macOS_${ARCH}/bin/gh" "$DEST/gh"
 
 # Windows（系統內建 winget，不碰網站）
 winget install --id GitHub.cli -e --source winget
 ```
+
+> ⚠️ **Windows 特別注意（重要）：** 這一步是在 terminal 裡跑的 CLI Agent（claude / codex）內執行的。winget 裝完 gh 後，**這個正在跑的 session 吃不到新 PATH**，`gh --version` 會 `command not found`。此時**沒辦法只重開 terminal**——因為重開就得重啟 claude/codex。請這樣帶學員：
+> 1. 告訴學員：「gh 裝好了，但要讓它生效，我們得重開一次。請你先輸入 `/exit` 離開，把整個 terminal 視窗關掉，重新打開。」
+> 2. 重開 terminal 後，重新啟動 `claude`（或 `codex`），並**重新餵這份 `to_CLI_AI_Agent_setup.md`**。
+> 3. 這次 `gh --version` 就會有版本號，直接從 Step 3（登入）繼續。
 
 驗證：
 ```bash
@@ -147,7 +156,8 @@ git add -A && git commit -m "update" && git push
 
 | 症狀 | 處理 |
 |------|------|
-| `gh: command not found` | Step 2 沒裝好 / 沒重開 terminal；重做 Step 2 |
+| `gh: command not found`（Windows，剛用 winget 裝完） | PATH 沒刷新。**不是重做 Step 2**——請學員 `/exit` → 關掉整個 terminal 重開 → 重啟 claude/codex → 重餵本文件，從 Step 3 續（見 Step 2 的 Windows 注意事項） |
+| `gh: command not found`（macOS，剛裝完） | 沒重載 PATH / cp 沒進到全域 bin；`gh --version` 前先 `hash -r`，還是不行重做 Step 2 |
 | `gh auth login` 卡住 | 確認瀏覽器有貼 one-time code 並按 Authorize；可重跑指令 |
 | `repository already exists` | 改跑 `git remote add origin ... && git push -u origin main` |
 | push 被拒（non-fast-forward） | 先 `git pull --rebase origin main` 再 `git push` |

@@ -15,6 +15,7 @@
 1. **用繁體中文跟學員溝通**，技術名詞英文。不要假設他懂 `npm`、`brew`、`export` 是什麼——每個動詞都先用一句話解釋。
 2. **每個 Step 開始前，先告訴學員「我接下來要做什麼、為什麼」**，然後等學員說 OK 再開始。
 3. **執行任何 sudo / 修改 shell config / 開外部網站前，務必先問學員確認。**
+   **⚠️ sudo 一定會在 terminal 跳出「Password:」等學員輸入——你（AI Agent）代打不了。** 跑任何 `sudo` 指令前，先明確告訴學員：「接下來 terminal 會要你輸入**這台電腦的開機密碼**（打字時不會顯示，正常的），請你自己打、按 Enter。」跑下去後若畫面卡在 `Password:` 不動，就是在等學員輸入，別以為當機。
 4. **跑完每個指令，看 output 確認成功，再進下一步。** 失敗就停下來解釋，不要硬往下。
 5. **如果某步驟學員系統已經做好了，跳過。** 例如 `node -v` 顯示 v18+，就不用再裝 Node.js。
 6. **不確定的時候，問學員，不要猜。**
@@ -108,7 +109,7 @@ brew install node
 ```
 
 ### 路徑 B：macOS 沒有 Homebrew → 你直接抓官方安裝包裝好
-安裝要用 `sudo`，依核心規則 3 先跟學員說明再執行：
+安裝要用 `sudo`（第 3 步）。**依核心規則 3：先告訴學員「等一下 terminal 會跳出 Password:，請你自己輸入開機密碼、按 Enter」，再跑指令。** 卡在 `Password:` 是正常的，那是在等學員打字。
 ```bash
 # 1. 取得目前 LTS 版本號（純 shell，不需額外工具）
 LTS=$(curl -fsSL https://nodejs.org/dist/index.json \
@@ -152,7 +153,7 @@ npm install -g @anthropic-ai/claude-code
 
 | 錯誤 | 處理方式 |
 |------|---------|
-| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @anthropic-ai/claude-code` |
+| `EACCES: permission denied`（macOS） | 跑 `sudo npm install -g @anthropic-ai/claude-code`（會跳 `Password:`，**先請學員自己輸入開機密碼**，見核心規則 3） |
 | `EACCES`（不想用 sudo） | `mkdir -p ~/.npm-global && npm config set prefix '~/.npm-global'`，再加 `export PATH=~/.npm-global/bin:$PATH` 到 `~/.zshrc`，重 source 後重跑 |
 | `npm: command not found` | 回去 Step 2.5 |
 | Windows「拒絕存取」 | 以系統管理員身分執行 PowerShell |
@@ -211,13 +212,14 @@ claude
 > 「現在把 Codex 跟你的 OpenAI / ChatGPT 帳號連起來。」
 
 ```bash
-codex auth
+codex login
 ```
 
-- 瀏覽器跳出，學員用 ChatGPT 帳號登入授權
+- 跑完會開瀏覽器，學員選 **Sign in with ChatGPT**、用 ChatGPT 帳號登入授權
 - 回 terminal，看到登入成功訊息 = 完成
+- 可用 `codex login status` 確認目前登入狀態
 
-> 若 `codex auth` 指令不存在，多半是舊版：升級後重試 → `npm install -g @openai/codex@latest`。
+> 若 `codex login` 指令不存在，多半是舊版：升級後重試 → `npm install -g @openai/codex@latest`。
 > （登入一律用 ChatGPT 訂閱帳號授權，**不要改用 API key**。）
 
 ---
@@ -270,7 +272,7 @@ codex auth
 | `claude: command not found`（裝完之後） | npm 全域路徑不在 PATH | `which npm`，找出 prefix，把 `<prefix>/bin` 加到 `~/.zshrc` PATH |
 | `codex: command not found`（裝完之後） | 同上 | 同上 |
 | `claude` 登入頁沒出現 | 網路問題 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
-| `codex auth` 沒有這個指令 | 舊版 codex | 升級 → `npm install -g @openai/codex@latest`，再重試登入 |
+| `codex login` 沒有這個指令 | 舊版 codex | 升級 → `npm install -g @openai/codex@latest`，再重試登入 |
 | AI Agent 自己卡住或亂答 | 網路 / Antigravity 服務問題 | 講師接手，改用手動 setup |
 | GitHub 相關問題（`gh` 裝不起來、登入卡住） | — | 屬 Claude Code 階段，見 `github-setup.md` 的常見錯誤 |
 
