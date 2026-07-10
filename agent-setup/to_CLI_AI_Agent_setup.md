@@ -18,7 +18,7 @@
 
 ## Step 1 · GitHub 設定
 
-> GitHub 設定的**細部指令**在同資料夾的 `github-setup.md`——你（CLI Agent）把它讀進來、依步驟完成：裝 `gh`、帶學員登入、建立學員自己的個人 repo 並 push。
+> GitHub 設定的**細部指令**在 `agent-setup/github-setup.md`（相對 repo 根目錄，學員人就在根目錄）——你（CLI Agent）把它讀進來、依步驟完成：裝 `gh`、帶學員登入、建立學員自己的個人 repo 並 push。
 >
 > 註：`github-setup.md` 只是**給你參考的細部文件**，學員餵的入口是這份 `to_CLI_AI_Agent_setup.md`，不必請學員另外餵 `github-setup.md`。
 >

@@ -253,7 +253,7 @@ codex auth
 > codex      # 裝 Codex 的
 > ```
 >
-> 啟動後，把 **`to_CLI_AI_Agent_setup.md`** 這份文件餵給它（拖進來，或說「請依照 to_CLI_AI_Agent_setup.md 繼續設定」），它會帶你把 GitHub 接好、（Claude Code 的話）再裝狀態列面板。」
+> 啟動後，把 **`agent-setup/to_CLI_AI_Agent_setup.md`** 這份文件餵給它（拖進來，或說「請依照 agent-setup/to_CLI_AI_Agent_setup.md 繼續設定」），它會帶你把 GitHub 接好、（Claude Code 的話）再裝狀態列面板。」
 
 ---
 
