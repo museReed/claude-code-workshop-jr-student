@@ -35,17 +35,27 @@
 
 > **跳過條件：** 先跑 `gh --version`，有版本號就跳到 Step 3。
 
-**告訴學員：** 「我裝一個叫 `gh` 的小工具，它讓我可以直接幫你操作 GitHub，不用你一直點網頁。」
+**告訴學員：** 「我裝一個叫 `gh` 的小工具，它讓我可以直接幫你操作 GitHub。**我直接幫你裝好，你不用上任何網站點。**」
+
+> ⚠️ **不要**把學員導去 `cli.github.com` 手動下載。依系統選一條路徑，用指令裝好。
 
 ```bash
 # macOS（有 Homebrew）
 brew install gh
 
-# macOS（沒有 Homebrew）→ 改用官方安裝頁
-#   開 https://cli.github.com/ 下載安裝，裝完請學員重開 terminal
+# macOS（沒有 Homebrew）→ 你直接抓官方 binary（免管理員、不碰網站）
+GH_VER=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest \
+  | grep -m1 '"tag_name"' | sed -E 's/.*"v?([^"]+)".*/\1/')
+ARCH=$([ "$(uname -m)" = "arm64" ] && echo arm64 || echo amd64)
+curl -fL -o /tmp/gh.zip \
+  "https://github.com/cli/cli/releases/download/v${GH_VER}/gh_${GH_VER}_macOS_${ARCH}.zip"
+unzip -oq /tmp/gh.zip -d /tmp
+# 放進 npm 全域 bin：claude/codex 就裝在這，一定在 PATH、免管理員權限
+DEST="$(npm config get prefix)/bin"
+mkdir -p "$DEST" && cp "/tmp/gh_${GH_VER}_macOS_${ARCH}/bin/gh" "$DEST/gh"
 
-# Windows
-winget install --id GitHub.cli
+# Windows（系統內建 winget，不碰網站）
+winget install --id GitHub.cli -e --source winget
 ```
 
 驗證：
@@ -83,9 +93,9 @@ git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .lo
 
 ## Step 4 · 建立個人 repo 並 push（AI Agent 自主執行）
 
-**告訴學員：** 「接下來我自己來：幫你開一個新的個人 repo，把目前這個資料夾的成果推上去。你看著就好。」
+**告訴學員：** 「接下來我自己來：**在你桌面另外開一個「你自己的」成果 repo**（跟老師的素材資料夾分開），以後你的作品都放那。你看著就好。」
 
-> ⚠️ 注意：我們現在在 `claude-code-workshop-jr-student/`，這是 workshop 素材 repo（museReed 的）。要建的是**你自己帳號下的個人成果 repo**，命名為 `claude-code-workshop`。
+> ⚠️ **職責邊界（避免搞混）：** 現在所在的 `claude-code-workshop-jr-student/` 是**老師的 workshop 素材 repo（museReed 的），不要 push 到這裡**。下面的指令會在 `~/Desktop/my-claude-workshop/` 另建一個**學員自己帳號下**的成果 repo（`claude-code-workshop`），兩者分開。
 
 ```bash
 # 1. 建立個人成果資料夾（與 workshop 素材分開）
