@@ -10,7 +10,12 @@
 - [ ] 下載並安裝 **Cursor** → <https://www.cursor.com/downloads>（選對應你系統的版本）
 - [ ] 用 **Google 或 GitHub** 登入 Cursor（登入時**選免費方案，不要選 Pro**，見下方 ⚠️）
 - [ ] 註冊一個 **GitHub** 帳號 → <https://github.com/signup>
-- [ ] 下載今天會用到的三份檔案（當天會教怎麼用）：
+- [ ] **把 workshop 素材 clone 下來**（不會做沒關係，當天開場會一起做）：用 Cursor 開它的 AI，貼上並執行
+  ```
+  cd ~/Desktop && git clone https://github.com/museReed/claude-code-workshop-jr-student.git
+  ```
+  然後用 Cursor **開這個資料夾**——之後的 `setup.md`、`github-setup.md` 都預設你人已經在裡面。
+- [ ] （選讀）先看過今天會用到的三份檔案（clone 後都在資料夾裡）：
   - [`setup.md`](./setup.md)（裝環境）
   - [`panel-setup.md`](./panel-setup.md)（裝狀態列面板）
   - [`github-setup.md`](./github-setup.md)（連 GitHub）

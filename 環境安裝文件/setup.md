@@ -10,7 +10,7 @@
 
 ## 給 Cursor AI 的核心規則
 
-你正在幫一位**非 CS 背景的 Tech Management 碩士生**設定 AI CLI 環境。請嚴格遵守以下原則：
+你正在幫一位**非工程背景的初學者**設定 AI CLI 環境。請嚴格遵守以下原則：
 
 1. **用繁體中文跟學員溝通**，技術名詞英文。不要假設他懂 `npm`、`brew`、`export` 是什麼——每個動詞都先用一句話解釋。
 2. **每個 Step 開始前，先告訴學員「我接下來要做什麼、為什麼」**，然後等學員說 OK 再開始。
@@ -24,17 +24,29 @@
 ## Step 1 · 詢問學員要裝哪些 AI 工具
 
 **告訴學員，並等他回答：**
-> 「今天 workshop 會用到 AI CLI 工具——在 terminal 裡跑的 AI 助手。有兩個選擇：
+> 「今天 workshop 會用到 AI CLI 工具——在 terminal 裡跑的 AI 助手。有兩個選擇，**兩個都需要付費訂閱帳號**（約 US$20/月起）：
 >
-> - **Claude Code**（Anthropic 出的）→ 需要 Claude Pro/Max 訂閱帳號
-> - **Codex CLI**（OpenAI 出的）→ 需要 ChatGPT Plus/Pro 訂閱帳號
+> - **Claude Code**（Anthropic 出的）→ 需要 **Claude Pro 或 Max** 訂閱
+> - **Codex CLI**（OpenAI 出的）→ 需要 **ChatGPT Plus 或 Pro** 訂閱
 >
-> 你有哪個訂閱？想裝哪個（或兩個都裝）？」
+> ⚠️ **課程不提供共用金鑰（API key）**，需要用你自己的訂閱帳號。你有哪個訂閱？想裝哪個（或兩個都裝）？」
 
 根據學員回答，決定後續要走哪幾條路：
 - 只裝 Claude Code → 做 Step 3A + Step 4A
 - 只裝 Codex CLI → 做 Step 3B + Step 4B
 - 兩個都裝 → 做 Step 3A + 3B + 4A + 4B
+
+### 學員說「我兩個訂閱都沒有」
+
+**告訴學員：**
+> 「今天用的工具需要付費訂閱，課程不提供共用金鑰。你可以現在申請一個（約 US$20/月），或今天先看講師示範、之後自己補做：
+>
+> - 想用 **Claude Code** → 打開 <https://claude.ai>，登入後點 **Upgrade to Pro**（Pro 就夠上課，Max 是重度使用者才需要）。
+> - 想用 **Codex CLI** → 打開 <https://chatgpt.com>，升級 **ChatGPT Plus**。
+>
+> 申請 + 付款完成後回來告訴我，我們接著裝環境。」
+
+> **給講師：** 學員當場不想付費也沒關係——讓他看鄰座或講師的螢幕，跟著理解流程，環境當天先跳過。**不要用 API key 幫他頂替。**
 
 ---
 
@@ -189,75 +201,27 @@ codex auth
 - 瀏覽器跳出，學員用 ChatGPT 帳號登入授權
 - 回 terminal，看到登入成功訊息 = 完成
 
-> 若 `codex auth` 指令不存在，改設 `OPENAI_API_KEY`：
-> - 到 https://platform.openai.com/api-keys 建立 key
-> - macOS：`echo 'export OPENAI_API_KEY="<key>"' >> ~/.zshrc && source ~/.zshrc`
-> - Windows：`[Environment]::SetEnvironmentVariable("OPENAI_API_KEY","<key>","User")`
+> 若 `codex auth` 指令不存在，多半是舊版：升級後重試 → `npm install -g @openai/codex@latest`。
+> （登入一律用 ChatGPT 訂閱帳號授權，**不要改用 API key**。）
 
 ---
 
-## Step 5 · 安裝 GitHub CLI 並登入
+## Step 5 · GitHub 設定 →（不在這裡做，交給 Claude Code）
 
-> **跳過條件：** `gh --version` 有結果 → 跑 `gh auth status`，已登入就直接跳到 Step 6。
-
-**告訴學員：**
-> 「GitHub 是用來存放你程式碼和文字檔的雲端倉庫。我先幫你裝 `gh`——一個可以讓我直接操作 GitHub 的小工具，不用你自己點網頁。」
-
-### 安裝 gh
-
-```bash
-# macOS（有 Homebrew）
-brew install gh
-
-# macOS（沒有 Homebrew）→ 打開 https://cli.github.com/ 下載安裝，裝完重開 terminal
-
-# Windows
-winget install --id GitHub.cli
-```
-
-驗證：
-```bash
-gh --version
-```
-
-### 註冊 GitHub 帳號（若尚未有帳號）
-
-**告訴學員：**
-> 「你需要一個免費 GitHub 帳號。我幫你打開註冊頁，填 email、設密碼、選 username（會出現在你的作品網址，建議用好記的英文名）。驗證完 email 後回來告訴我。」
-
-打開 https://github.com/signup，等學員完成。已有帳號直接跳到下一步。
-
-### 登入 gh
-
-**告訴學員：**
-> 「現在把這台電腦跟你的 GitHub 帳號連起來。我跑指令，會跳出一個一次性代碼，你在瀏覽器貼上、按授權就好。」
-
-```bash
-gh auth login --hostname github.com --git-protocol https --web
-```
-
-- 終端機顯示 **one-time code**，瀏覽器同時打開
-- 學員把 code 貼到瀏覽器、按 **Authorize**
-- 回 terminal 看到 `✓ Logged in as <username>` = 成功
-
-驗證並設定 git 身分：
-```bash
-gh auth status
-git config --global user.name  "$(gh api user --jq .login)"
-git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .login)@users.noreply.github.com"
-```
+> **職責分工：** GitHub 帳號、`gh` 安裝與登入、建立學員的個人 repo，**全部由 Claude Code 讀 `github-setup.md` 完成**（它本來就負責建 repo + push，放同一份最連貫）。這裡**不要**裝 `gh`、也不要跑 `gh auth login`，避免和 `github-setup.md` 重複。
+>
+> 你（Cursor AI）在這個檔案的任務，到「AI CLI 工具裝好並能登入」就結束了。GitHub 留到 Step 7、學員啟動 Claude Code 之後再做。
 
 ---
 
 ## Step 6 · 環境完成 → 交棒給 Claude Code
 
 **告訴學員：**
-> 「✅ 所有工具都裝好了！
+> 「✅ AI CLI 工具都裝好了！
 >
 > **已完成：**
 > - Node.js [版本] ✅
 > - [已裝的 AI 工具，例如：Claude Code v1.x.x / Codex CLI vx.x.x] ✅
-> - GitHub CLI（gh）已登入 ✅
 >
 > 現在請**離開 Cursor**，回到 terminal。你已經在 `claude-code-workshop-jr-student/` 資料夾裡，直接啟動 Claude Code：
 >
@@ -267,19 +231,29 @@ git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .lo
 >
 > （用 Codex 的學員也可以跑 `codex`）
 >
-> 啟動後還有最後一個小設定（Step 7），換 **Claude Code** 帶你做。」
+> 啟動後還有兩件事，換 **Claude Code** 帶你做：
+> 1. **連 GitHub + 建你自己的 repo** → 餵它 `github-setup.md`（Step 7）
+> 2. **裝狀態列面板** → 餵它 `panel-setup.md`（Step 8）」
 
 ---
 
-## Step 7 · 狀態列面板（在 Claude Code 裡做）
+## Step 7 · GitHub 設定（在 Claude Code 裡做）
 
-> **接力給 Claude Code。** 學員啟動 `claude` 後，把 `panel-setup.md` 餵給 Claude Code（拖進來，或說「請依照 panel-setup.md 幫我裝狀態列面板」）。
+> **接力給 Claude Code。** 學員啟動 `claude` 後，把 `github-setup.md` 餵給 Claude Code（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」）。它會裝好 `gh`、帶學員登入、建立學員自己的個人 repo 並 push。
+>
+> 完成標準：學員自己帳號下出現 `claude-code-workshop` repo。
+
+---
+
+## Step 8 · 狀態列面板（在 Claude Code 裡做）
+
+> **接力給 Claude Code。** 接著把 `panel-setup.md` 餵給 Claude Code（拖進來，或說「請依照 panel-setup.md 幫我裝狀態列面板」）。
 >
 > 完成標準：Claude Code 畫面最底下出現狀態列。
 
 ---
 
-> ✅ **全部完成 = Step 1–7 都做完。** 環境就緒，可以開始 workshop 練習了！
+> ✅ **全部完成 = Step 1–8 都做完。** 環境就緒，可以開始 workshop 練習了！
 
 ---
 
@@ -292,15 +266,14 @@ git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .lo
 | `claude: command not found`（裝完之後） | npm 全域路徑不在 PATH | `which npm`，找出 prefix，把 `<prefix>/bin` 加到 `~/.zshrc` PATH |
 | `codex: command not found`（裝完之後） | 同上 | 同上 |
 | `claude` 登入頁沒出現 | 網路問題 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
-| `codex auth` 沒有這個指令 | 舊版 codex | 改設 `OPENAI_API_KEY`（見 Step 4B 備案） |
-| `gh auth login` 卡住 | 瀏覽器沒貼 code / 沒按 Authorize | 重跑指令 |
-| `gh: command not found` | Step 5 沒裝好 / 沒重開 terminal | 重做 Step 5 安裝 |
+| `codex auth` 沒有這個指令 | 舊版 codex | 升級 → `npm install -g @openai/codex@latest`，再重試登入 |
 | Cursor AI 自己卡住或亂答 | 網路 / Cursor 服務問題 | 講師接手，改用手動 setup |
+| GitHub 相關問題（`gh` 裝不起來、登入卡住） | — | 屬 Claude Code 階段，見 `github-setup.md` 的常見錯誤 |
 
 ---
 
 ## 講師救援包
 
-1. **AI 工具卡登入：** 備一把 API key 紙片（Anthropic 或 OpenAI），學員設環境變數後直接進入
+1. **AI 工具卡登入：** 確認學員的訂閱帳號有效、瀏覽器有按授權，再重跑登入指令。**課程不提供 API key，不要用金鑰頂替。**
 2. **GitHub 卡登入：** 確認學員有在瀏覽器按 Authorize；`gh auth status` 確認狀態
-3. **跳過策略：** 學員卡超過 8 分鐘，先讓他用備用 key 頂著，workshop 後再補——不要 30 個人陪 1 個人等
+3. **跳過策略：** 學員卡超過 8 分鐘，先讓他看鄰座或講師 demo，workshop 後再補——不要 30 個人陪 1 個人等

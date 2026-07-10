@@ -24,7 +24,7 @@
 
 ## 給 Claude Code 的核心規則
 
-你正在幫一位**非 CS 背景的 Tech Management 碩士生**安裝 claude-hud。請遵守：
+你正在幫一位**非工程背景的初學者**安裝 claude-hud。請遵守：
 
 1. **用繁體中文溝通**，技術名詞英文。
 2. **這三個是 slash 指令，必須由學員親自貼進 Claude Code 的輸入框**（不是終端機 / 不是 Bash）。你（Claude Code）無法替自己執行 slash 指令，所以你的工作是：清楚地把指令給學員、解釋、等他貼完回報、再驗證。
