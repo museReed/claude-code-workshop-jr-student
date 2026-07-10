@@ -1,14 +1,14 @@
 # GitHub 設定指南（註冊 → 建 repo → push）
 
-> **這份文件是給 Claude Code 看的。** 學員把這份文件餵給 Claude Code（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」），它會帶學員把帳號接好、建立一個個人 repo、並把成果 push 上去。
+> **這份文件是給 AI Agent（Claude Code 或 Codex）看的。** 學員把這份文件餵給他的 AI CLI（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」），它會帶學員把帳號接好、建立一個個人 repo、並把成果 push 上去。
 >
 > **前提（學員已完成）：** git 已可用（Phase B 的 clone 成功就代表 git 正常），學員目前在 `claude-code-workshop-jr-student/` 資料夾裡。
 >
-> 目標：**人工介入越少越好**。學員只需要做兩件事：(1) 在瀏覽器註冊 GitHub 帳號、(2) 在 `gh auth login` 時於瀏覽器按授權。其餘全部由 Claude Code 自主執行。
+> 目標：**人工介入越少越好**。學員只需要做兩件事：(1) 在瀏覽器註冊 GitHub 帳號、(2) 在 `gh auth login` 時於瀏覽器按授權。其餘全部由 AI Agent 自主執行。
 
 ---
 
-## 給 Claude Code 的核心規則
+## 給 AI Agent 的核心規則
 
 你正在幫一位**非工程背景的初學者**設定 GitHub。請嚴格遵守：
 
@@ -81,7 +81,7 @@ git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .lo
 
 ---
 
-## Step 4 · 建立個人 repo 並 push（Claude Code 自主執行）
+## Step 4 · 建立個人 repo 並 push（AI Agent 自主執行）
 
 **告訴學員：** 「接下來我自己來：幫你開一個新的個人 repo，把目前這個資料夾的成果推上去。你看著就好。」
 
@@ -126,7 +126,7 @@ gh repo view --web   # 瀏覽器打開你的新 repo
 
 ## 之後怎麼用（一句話）
 
-以後每次想備份成果，在 `~/Desktop/my-claude-workshop/` 裡跑這三行（或直接叫 Claude Code「幫我 push 上 GitHub」）：
+以後每次想備份成果，在 `~/Desktop/my-claude-workshop/` 裡跑這三行（或直接叫你的 AI CLI（Claude Code / Codex）「幫我 push 上 GitHub」）：
 ```bash
 git add -A && git commit -m "update" && git push
 ```

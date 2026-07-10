@@ -1,6 +1,6 @@
 # Workshop Setup Instructions
 
-> **這份文件是給 AI Agent 看的。** 學員把這份文件交給他的 AI Agent（例如 Cursor、Claude Code 等），跟它說「請依照這份文件幫我設定環境」，它會帶學員一步步做完。
+> **這份文件是給 IDE 裡的 AI Agent 看的（例如 Antigravity）。** 學員把這份文件交給 IDE 的 AI Agent，跟它說「請依照這份文件幫我設定環境」，它會帶學員裝好環境（Node + Claude Code / Codex CLI）並提醒註冊 GitHub。之後的 **GitHub 設定與狀態列面板**，見同資料夾的 `to_CLI_AI_Agent_setup.md`（給 terminal 裡的 CLI Agent 用）。
 >
 > **前提（學員已完成）：** git clone 已經做好，學員目前就在 `claude-code-workshop-jr-student/` 資料夾裡，AI Agent 開的是這個資料夾。
 >
@@ -18,7 +18,7 @@
 4. **跑完每個指令，看 output 確認成功，再進下一步。** 失敗就停下來解釋，不要硬往下。
 5. **如果某步驟學員系統已經做好了，跳過。** 例如 `node -v` 顯示 v18+，就不用再裝 Node.js。
 6. **不確定的時候，問學員，不要猜。**
-7. **⚠️ Windows 學員特別注意：用 winget / PowerShell 裝完任何工具（Node、`gh`、`claude`…）後，PATH 不會馬上生效。** 請學員**把整個 IDE（Cursor）關掉、重新開啟**，新開的 terminal 才吃得到剛裝好的指令。裝完卻 `command not found`，九成是這個——別急著重裝，先重開 IDE。
+7. **⚠️ Windows 學員特別注意：用 winget / PowerShell 裝完任何工具（Node、`gh`、`claude`…）後，PATH 不會馬上生效。** 請學員**把整個 IDE（Antigravity）關掉、重新開啟**，新開的 terminal 才吃得到剛裝好的指令。裝完卻 `command not found`，九成是這個——別急著重裝，先重開 IDE。
 
 ---
 
@@ -206,58 +206,46 @@ codex auth
 
 ---
 
-## Step 5 · GitHub 設定 →（不在這裡做，交給 Claude Code）
+## Step 5 · 提醒學員註冊 GitHub 帳號（`gh` 設定留到後面）
 
-> **職責分工：** GitHub 帳號、`gh` 安裝與登入、建立學員的個人 repo，**全部由 Claude Code 讀 `github-setup.md` 完成**（它本來就負責建 repo + push，放同一份最連貫）。這裡**不要**裝 `gh`、也不要跑 `gh auth login`，避免和 `github-setup.md` 重複。
+**主動告訴學員，並把連結貼出來（現在就先做，別等）：**
+> 「等一下要把你的成果放上 GitHub 備份。**如果你還沒有 GitHub 帳號，現在先花兩分鐘註冊一個**（免費）：
 >
-> 你（Cursor AI）在這個檔案的任務，到「AI CLI 工具裝好並能登入」就結束了。GitHub 留到 Step 7、學員啟動 Claude Code 之後再做。
+> 👉 <https://github.com/signup>
+>
+> 填 email、設密碼、選一個 username（會出現在你的作品網址，建議用好記的英文名），驗證完 email 就好。已經有帳號的跳過這步。」
+
+> **職責分工：** `gh` 安裝與登入、建立個人 repo、push，**留到學員啟動 AI CLI（Claude Code 或 Codex）後，由它讀 `github-setup.md` 完成**（那份本來就負責建 repo + push，放同一份最連貫）。這裡**不要**裝 `gh`、也不要跑 `gh auth login`，避免和 `github-setup.md` 重複。你在這個檔案的任務，到「AI CLI 裝好能登入 ＋ 已提醒學員註冊 GitHub」就結束了。
 
 ---
 
-## Step 6 · 環境完成 → 交棒給 Claude Code
+## Step 6 · 環境完成 → 交棒給 CLI 裡的 AI Agent
 
 **告訴學員：**
-> 「✅ AI CLI 工具都裝好了！
+> 「✅ 環境都裝好了！
 >
 > **已完成：**
 > - Node.js [版本] ✅
 > - [已裝的 AI 工具，例如：Claude Code v1.x.x / Codex CLI vx.x.x] ✅
+> - 已提醒你註冊 GitHub 帳號 ✅
 >
-> 現在請**離開 Cursor**，回到 terminal。你已經在 `claude-code-workshop-jr-student/` 資料夾裡，直接啟動 Claude Code：
+> 接下來的 **GitHub 設定 + 狀態列面板**，改由你 **terminal 裡的 AI CLI** 帶你做。現在請**離開 Antigravity**，回到 terminal，啟動你剛裝的 AI CLI：
 >
 > ```bash
-> claude
+> claude     # 裝 Claude Code 的
+> # 或
+> codex      # 裝 Codex 的
 > ```
 >
-> （用 Codex 的學員也可以跑 `codex`）
->
-> 啟動後還有兩件事，換 **Claude Code** 帶你做：
-> 1. **連 GitHub + 建你自己的 repo** → 餵它 `github-setup.md`（Step 7）
-> 2. **裝狀態列面板** → 餵它 `panel-setup.md`（Step 8）」
+> 啟動後，把 **`to_CLI_AI_Agent_setup.md`** 這份文件餵給它（拖進來，或說「請依照 to_CLI_AI_Agent_setup.md 繼續設定」），它會帶你把 GitHub 接好、（Claude Code 的話）再裝狀態列面板。」
 
 ---
 
-## Step 7 · GitHub 設定（在 Claude Code 裡做）
-
-> **接力給 Claude Code。** 學員啟動 `claude` 後，把 `github-setup.md` 餵給 Claude Code（拖進來，或說「請依照 github-setup.md 幫我設定 GitHub」）。它會裝好 `gh`、帶學員登入、建立學員自己的個人 repo 並 push。
->
-> 完成標準：學員自己帳號下出現 `claude-code-workshop` repo。
+> ✅ **這份文件（IDE 階段）到這裡結束** = Step 1–6 都做完。GitHub 與面板接續見 `to_CLI_AI_Agent_setup.md`。
 
 ---
 
-## Step 8 · 狀態列面板（在 Claude Code 裡做）
-
-> **接力給 Claude Code。** 接著把 `panel-setup.md` 餵給 Claude Code（拖進來，或說「請依照 panel-setup.md 幫我裝狀態列面板」）。
->
-> 完成標準：Claude Code 畫面最底下出現狀態列。
-
----
-
-> ✅ **全部完成 = Step 1–8 都做完。** 環境就緒，可以開始 workshop 練習了！
-
----
-
-## 失敗模式速查表（給 Cursor AI 與講師）
+## 失敗模式速查表（給 AI Agent 與講師）
 
 | 症狀 | 可能原因 | 解法 |
 |------|---------|------|
@@ -267,7 +255,7 @@ codex auth
 | `codex: command not found`（裝完之後） | 同上 | 同上 |
 | `claude` 登入頁沒出現 | 網路問題 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
 | `codex auth` 沒有這個指令 | 舊版 codex | 升級 → `npm install -g @openai/codex@latest`，再重試登入 |
-| Cursor AI 自己卡住或亂答 | 網路 / Cursor 服務問題 | 講師接手，改用手動 setup |
+| AI Agent 自己卡住或亂答 | 網路 / Antigravity 服務問題 | 講師接手，改用手動 setup |
 | GitHub 相關問題（`gh` 裝不起來、登入卡住） | — | 屬 Claude Code 階段，見 `github-setup.md` 的常見錯誤 |
 
 ---
