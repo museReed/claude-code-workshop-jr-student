@@ -20,6 +20,10 @@
 5. **如果某步驟學員系統已經做好了，跳過。** 例如 `node -v` 顯示 v18+，就不用再裝 Node.js。
 6. **不確定的時候，問學員，不要猜。**
 7. **⚠️ Windows 學員特別注意：用 winget / PowerShell 裝完任何工具（Node、`gh`、`claude`…）後，PATH 不會馬上生效。** 請學員**把整個 IDE（Antigravity）關掉、重新開啟**，新開的 terminal 才吃得到剛裝好的指令。裝完卻 `command not found`，九成是這個——別急著重裝，先重開 IDE。
+8. **⚠️ Windows PowerShell Execution Policy：** Windows 預設的 PowerShell Execution Policy 是 `Restricted`，會阻擋所有 `.ps1` 腳本執行。透過 npm 全域安裝的 CLI 工具（`claude`、`codex`、`gh`）都會產生 `.ps1` 包裝腳本，PowerShell 會優先嘗試執行它們，導致 `cannot be loaded because running scripts is disabled` 錯誤。**處理方式（二選一）：**
+   - **快速繞過（推薦）：** 改用 `.cmd` 後綴呼叫，例如 `claude.cmd`、`codex.cmd`。`.cmd` 檔不受 Execution Policy 限制。
+   - **根本修復：** 執行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`（只影響當前使用者，不需要管理員權限），之後就能直接用 `claude`、`codex`。
+   - **偵測方式：** 在 Step 2 偵測環境時，先跑 `Get-ExecutionPolicy`，若回傳 `Restricted` 就主動提醒學員並協助修正。
 
 ---
 
@@ -82,11 +86,24 @@ which brew 2>/dev/null || echo "❌ NOT INSTALLED (沒裝沒關係)"
 
 Windows PowerShell：
 ```powershell
+# 先偵測 Execution Policy
+Write-Host "===== Execution Policy ====="
+$ep = Get-ExecutionPolicy
+Write-Host $ep
+if ($ep -eq 'Restricted') {
+  Write-Host "⚠️ Execution Policy 為 Restricted，npm 安裝的 CLI 工具 (.ps1) 會被阻擋"
+  Write-Host "   → 建議執行: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser"
+  Write-Host "   → 或改用 .cmd 後綴呼叫（例如 claude.cmd）"
+}
+
 Write-Host "===== OS ====="; (Get-CimInstance Win32_OperatingSystem).Caption
 Write-Host "===== Node.js ====="; try { node -v } catch { "❌ NOT INSTALLED" }
 Write-Host "===== npm ====="; try { npm -v } catch { "❌ NOT INSTALLED" }
-Write-Host "===== Claude Code ====="; try { claude --version } catch { "❌ NOT INSTALLED" }
-Write-Host "===== Codex CLI ====="; try { codex --version } catch { "❌ NOT INSTALLED" }
+Write-Host "===== git ====="; try { git --version } catch { "❌ NOT INSTALLED（Step 4 建 repo 時需要，github-setup.md 會處理）" }
+
+# 用 .cmd 後綴偵測，避免被 Execution Policy 阻擋
+Write-Host "===== Claude Code ====="; try { claude.cmd --version } catch { "❌ NOT INSTALLED" }
+Write-Host "===== Codex CLI ====="; try { codex.cmd --version } catch { "❌ NOT INSTALLED" }
 Write-Host "===== GitHub CLI ====="; try { gh --version } catch { "❌ NOT INSTALLED" }
 ```
 
@@ -271,8 +288,10 @@ codex login
 | `EACCES` 安裝工具 | 全域 npm 權限不足 | `sudo` 或改 `~/.npm-global` |
 | `claude: command not found`（裝完之後） | npm 全域路徑不在 PATH | `which npm`，找出 prefix，把 `<prefix>/bin` 加到 `~/.zshrc` PATH |
 | `codex: command not found`（裝完之後） | 同上 | 同上 |
+| `claude` / `codex` 報 `cannot be loaded because running scripts is disabled`（Windows） | PowerShell Execution Policy 為 `Restricted`，阻擋 `.ps1` 腳本 | 改用 `claude.cmd` / `codex.cmd` 呼叫；或執行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` 後重試 |
 | `claude` 登入頁沒出現 | 網路問題 | 跑 `claude --dangerously-skip-permissions` 直接進介面 |
 | `codex login` 沒有這個指令 | 舊版 codex | 升級 → `npm install -g @openai/codex@latest`，再重試登入 |
+| `git: command not found`（Windows） | Windows 不預裝 git；學員可能是下載 ZIP 而非 git clone 取得教材 | `winget install --id Git.Git -e --source winget`，裝完後加 PATH：`$env:PATH = "C:\Program Files\Git\cmd;" + $env:PATH` |
 | AI Agent 自己卡住或亂答 | 網路 / Antigravity 服務問題 | 講師接手，改用手動 setup |
 | GitHub 相關問題（`gh` 裝不起來、登入卡住） | — | 屬 Claude Code 階段，見 `github-setup.md` 的常見錯誤 |
 

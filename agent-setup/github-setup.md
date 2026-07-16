@@ -17,6 +17,9 @@
 3. **只有兩個動作需要學員親自做**：瀏覽器註冊、`gh auth login` 的瀏覽器授權。其餘你自己跑。
 4. **不要把任何 token / 密碼寫進檔案**。`gh auth login` 會安全地保管憑證。
 5. 不確定就問學員，不要猜。
+6. **⚠️ Windows 特別處理（PATH / Execution Policy）：**
+   - 剛裝完 `gh` 或 `git` 後，直接手動加 PATH：`$env:PATH = "C:\Program Files\GitHub CLI;C:\Program Files\Git\cmd;" + $env:PATH`。
+   - 若指令被阻擋 (`running scripts is disabled`)，改用 `.cmd` 後綴呼叫（如 `claude.cmd`）或執行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`。
 
 ---
 
@@ -62,10 +65,10 @@ cp "/tmp/gh_${GH_VER}_macOS_${ARCH}/bin/gh" "$DEST/gh" 2>/dev/null \
 winget install --id GitHub.cli -e --source winget
 ```
 
-> ⚠️ **Windows 特別注意（重要）：** 這一步是在 terminal 裡跑的 CLI Agent（claude / codex）內執行的。winget 裝完 gh 後，**這個正在跑的 session 吃不到新 PATH**，`gh --version` 會 `command not found`。此時**沒辦法只重開 terminal**——因為重開就得重啟 claude/codex。請這樣帶學員：
-> 1. 告訴學員：「gh 裝好了，但要讓它生效，我們得重開一次。請你先輸入 `/exit` 離開，把整個 terminal 視窗關掉，重新打開。」
-> 2. 重開 terminal 後，重新啟動 `claude`（或 `codex`），並**重新餵這份 `to_CLI_AI_Agent_setup.md`**。
-> 3. 這次 `gh --version` 就會有版本號，直接從 Step 3（登入）繼續。
+> ⚠️ **Windows 特別注意（PATH 問題）：** 裝完 `gh` 後，**這個 session 吃不到新 PATH**，直接跑 `gh` 會 `command not found`。**不需要叫學員重開**，請直接手動把路徑加進環境變數：
+> ```powershell
+> $env:PATH = "C:\Program Files\GitHub CLI;" + $env:PATH
+> ```
 
 驗證：
 ```bash
@@ -92,10 +95,22 @@ gh auth login --hostname github.com --git-protocol https --web
 gh auth status
 ```
 
+設定 `gh` 幫 git 處理認證（防止 push 卡住）：
+```bash
+gh auth setup-git
+```
+
 設定 git 身分（若尚未設定，用 GitHub 帳號資訊）：
 ```bash
+# macOS / Linux (Bash)
 git config --global user.name  "$(gh api user --jq .login)"
 git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .login)@users.noreply.github.com"
+
+# Windows (PowerShell)
+$login = gh api user --jq ".login"
+$id = gh api user --jq ".id"
+git config --global user.name $login
+git config --global user.email "$id+$login@users.noreply.github.com"
 ```
 
 ---
@@ -106,22 +121,25 @@ git config --global user.email "$(gh api user --jq '.id')+$(gh api user --jq .lo
 
 > ⚠️ **職責邊界（避免搞混）：** 現在所在的 `claude-code-workshop-jr-student/` 是**老師的 workshop 素材 repo（museReed 的），不要 push 到這裡**。下面的指令會在 `~/Desktop/my-claude-workshop/` 另建一個**學員自己帳號下**的成果 repo（`claude-code-workshop`），兩者分開。
 
+> ⚠️ **Windows 學員注意（Git 偵測）：** Windows 不預裝 git，若這步發現 `git: command not found`，請先幫學員裝 git：`winget install --id Git.Git -e --source winget`，並手動加 PATH：`$env:PATH = "C:\Program Files\Git\cmd;" + $env:PATH`。
+
 ```bash
-# 1. 建立個人成果資料夾（與 workshop 素材分開）
+# === macOS / Linux (Bash) ===
 mkdir -p ~/Desktop/my-claude-workshop
 cd ~/Desktop/my-claude-workshop
-
-# 2. 初始化 git
 git init -b main
-
-# 3. 建立起始 README
 printf '# 我的 Claude Code Workshop 成果\n\n今天學到的東西都在這裡。\n' > README.md
-
-# 4. 第一次 commit
 git add README.md
 git commit -m "First commit from Claude Code Workshop"
+gh repo create "claude-code-workshop" --private --source=. --remote=origin --push
 
-# 5. 建立 GitHub repo 並 push
+# === Windows (PowerShell) ===
+New-Item -ItemType Directory -Force -Path "$HOME\Desktop\my-claude-workshop" | Out-Null
+Set-Location "$HOME\Desktop\my-claude-workshop"
+git init -b main
+Set-Content -Path "README.md" -Value "# 我的 Claude Code Workshop 成果`n`n今天學到的東西都在這裡。`n" -Encoding UTF8
+git add README.md
+git commit -m "First commit from Claude Code Workshop"
 gh repo create "claude-code-workshop" --private --source=. --remote=origin --push
 ```
 
@@ -156,7 +174,10 @@ git add -A && git commit -m "update" && git push
 
 | 症狀 | 處理 |
 |------|------|
-| `gh: command not found`（Windows，剛用 winget 裝完） | PATH 沒刷新。**不是重做 Step 2**——請學員 `/exit` → 關掉整個 terminal 重開 → 重啟 claude/codex → 重餵本文件，從 Step 3 續（見 Step 2 的 Windows 注意事項） |
+| `gh: command not found`（Windows，剛用 winget 裝完） | 跑 `$env:PATH = "C:\Program Files\GitHub CLI;" + $env:PATH` 手動補 PATH |
+| `gh` 等工具出現 `running scripts is disabled`（Windows） | PowerShell Execution Policy 阻擋，改用 `.cmd` 呼叫或執行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` |
+| `git: command not found`（Windows） | `winget install --id Git.Git -e --source winget`，再加 PATH `$env:PATH = "C:\Program Files\Git\cmd;" + $env:PATH` |
+| `git push` 卡住不動 | 忘了跑 `gh auth setup-git`，git 不知道要用 gh 認證。按 Ctrl+C 中斷後，跑一次 `gh auth setup-git` 再 push |
 | `gh: command not found`（macOS，剛裝完） | 沒重載 PATH / cp 沒進到全域 bin；`gh --version` 前先 `hash -r`，還是不行重做 Step 2 |
 | `gh auth login` 卡住 | 確認瀏覽器有貼 one-time code 並按 Authorize；可重跑指令 |
 | `repository already exists` | 改跑 `git remote add origin ... && git push -u origin main` |

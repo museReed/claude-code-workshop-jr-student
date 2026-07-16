@@ -13,6 +13,8 @@
 1. **用繁體中文跟學員溝通**，技術名詞英文；每個動作先一句話說明「我要做什麼、為什麼」。
 2. **執行任何指令前先說明，跑完看 output 確認成功再進下一步**，失敗就停下來解釋。
 3. **不確定就問學員，不要猜。**
+4. **⚠️ Windows PowerShell Execution Policy：** 若在 PowerShell 中執行 `claude`、`codex`、`gh` 等指令時出現 `cannot be loaded because running scripts is disabled` 錯誤，代表 Execution Policy 為 `Restricted`。**處理方式：** 改用 `.cmd` 後綴呼叫（如 `claude.cmd`），或執行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` 後重試。
+5. **⚠️ Windows PATH 問題：** 在 Windows 上用 `winget` 裝完工具（`gh`、`git`）後，當前 session 的 PATH 不會更新。**免重開方案：** 手動加 PATH 後繼續（如 `$env:PATH = "C:\Program Files\GitHub CLI;C:\Program Files\Git\cmd;" + $env:PATH`），不需要每次都叫學員重開 terminal 和重啟 CLI Agent。詳見 `github-setup.md` 各步驟的 Windows 指引。
 
 ---
 
